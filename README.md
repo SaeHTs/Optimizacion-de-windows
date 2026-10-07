@@ -5,6 +5,11 @@
 Herramienta interactiva en **Python** para optimizar Windows: limpieza de disco,
 programas de inicio, rendimiento y mantenimiento, todo desde un menú en terminal.
 
+## 🔗 Enlaces
+
+- 📁 Repositorio: https://github.com/SaeHTs/Optimizacion
+- ⬇️ Descargas (Release v1.0): https://github.com/SaeHTs/Optimizacion/releases
+
 ## ⚠️ Advertencias
 
 - **Ejecuta siempre como Administrador** (el script se ofrece a reiniciarse solo).
