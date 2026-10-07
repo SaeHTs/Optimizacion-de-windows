@@ -7,8 +7,8 @@ programas de inicio, rendimiento y mantenimiento, todo desde un menú en termina
 
 ## 🔗 Enlaces
 
-- 📁 Repositorio: https://github.com/SaeHTs/Optimizacion
-- ⬇️ Descargas (Release v1.0): https://github.com/SaeHTs/Optimizacion/releases
+- 📁 Repositorio: https://github.com/SaeHTs/Optimizacion-de-windows
+- ⬇️ Descargas (releases): https://github.com/SaeHTs/Optimizacion-de-windows/releases
 
 ## ⚠️ Advertencias
 
