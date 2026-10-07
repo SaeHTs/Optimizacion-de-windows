@@ -1,10 +1,10 @@
 """🧹 Módulo 1: Limpieza de disco."""
 import os
+from concurrent.futures import ThreadPoolExecutor
 
 from config import RUTA_CACHE_UPDATE, RUTA_PREFETCH, RUTAS_TEMPORALES
 from utils import (
     confirmar,
-    ejecutar_comando,
     ejecutar_en_vivo,
     ejecutar_powershell,
     espacio_libre,
@@ -14,18 +14,6 @@ from utils import (
 
 
 # ---------------------------------------------------------------- helpers
-def _tamano_carpeta(ruta: str) -> int:
-    """Calcula el tamaño total de una carpeta en bytes."""
-    total = 0
-    for dirpath, _, archivos in os.walk(ruta):
-        for archivo in archivos:
-            try:
-                total += os.path.getsize(os.path.join(dirpath, archivo))
-            except OSError:
-                pass
-    return total
-
-
 def _eliminar_contenido(ruta: str) -> tuple[int, int]:
     """Elimina el contenido de una carpeta en UNA sola pasada.
 
@@ -61,57 +49,71 @@ def _eliminar_contenido(ruta: str) -> tuple[int, int]:
 
 
 # ---------------------------------------------------------------- operaciones
-def limpiar_temporales() -> None:
-    """Elimina archivos temporales de usuario y de Windows."""
+def limpiar_temporales(automatico: bool = False) -> None:
+    """Elimina archivos temporales de usuario y de Windows.
+
+    Las dos carpetas se procesan en parallo (más rápido en SSD).
+    """
     print("\n🧹 Limpiando archivos temporales...")
-    total_liberado = 0
-    for plantilla in RUTAS_TEMPORALES:
-        ruta = os.path.expandvars(plantilla)
-        if not os.path.isdir(ruta):
-            continue
-        liberado, errores = _eliminar_contenido(ruta)
-        total_liberado += liberado
+    rutas = [os.path.expandvars(p) for p in RUTAS_TEMPORALES]
+    rutas = [r for r in rutas if os.path.isdir(r)]
+    if not rutas:
+        print("  No hay carpetas temporales que limpiar.")
+        return
+
+    with ThreadPoolExecutor(max_workers=len(rutas)) as ejecutor:
+        resultados = list(ejecutor.map(_eliminar_contenido, rutas))
+
+    total = 0
+    for ruta, (liberado, errores) in zip(rutas, resultados):
+        total += liberado
         print(f"  • {ruta}: {fmt_bytes(liberado)} liberados"
               + (f" ({errores} archivos en uso)" if errores else ""))
-    print(f"✅ Total liberado: {fmt_bytes(total_liberado)}")
+    print(f"✅ Total liberado: {fmt_bytes(total)}")
 
 
-def limpiar_prefetch() -> None:
+def limpiar_prefetch(automatico: bool = False) -> None:
     """Elimina archivos de prefetch (Windows los reconstruye automáticamente)."""
     ruta = os.path.expandvars(RUTA_PREFETCH)
     print("\n🧹 Limpiando Prefetch...")
-    if not confirmar("Se eliminarán los archivos de precarga (se regeneran solos). ¿Continuar?"):
+    if not automatico and not confirmar(
+        "Se eliminarán los archivos de precarga (se regeneran solos). ¿Continuar?"
+    ):
         print("   Operación cancelada.")
         return
     liberado, errores = _eliminar_contenido(ruta)
-    print(f"✅ Prefetch limpiado: {fmt_bytes(liberado)} liberados")
+    print(f"✅ Prefetch limpiado: {fmt_bytes(liberado)} liberados"
+          + (f" ({errores} errores)" if errores else ""))
 
 
-def vaciar_papelera() -> None:
+def vaciar_papelera(automatico: bool = False) -> None:
     """Vacía la papelera de reciclaje de todas las unidades."""
     print("\n🗑️  Vaciando la papelera de reciclaje...")
-    if not confirmar("¿Vaciar la papelera de TODAS las unidades?"):
+    if not automatico and not confirmar("¿Vaciar la papelera de TODAS las unidades?"):
         print("   Operación cancelada.")
         return
-    codigo, salida = ejecutar_powershell("Clear-RecycleBin -Force -ErrorAction SilentlyContinue")
+    codigo, salida = ejecutar_powershell(
+        "Clear-RecycleBin -Force -ErrorAction SilentlyContinue"
+    )
     print("✅ Papelera vaciada." if codigo == 0 else f"⚠️  Sin cambios: {salida or 'ok'}")
 
 
-def limpiar_cache_windows_update() -> None:
+def limpiar_cache_windows_update(automatico: bool = False) -> None:
     """Detiene Windows Update y elimina su caché de descargas."""
     print("\n🧹 Limpiando caché de Windows Update...")
-    if not confirmar("Se detendrá temporalmente el servicio Windows Update. ¿Continuar?"):
+    if not automatico and not confirmar(
+        "Se detendrá temporalmente el servicio Windows Update. ¿Continuar?"
+    ):
         print("   Operación cancelada.")
         return
     print("  Deteniendo servicios...")
-    ejecutar_comando("net stop wuauserv")
-    ejecutar_comando("net stop bits")
+    ejecutar_powershell("Stop-Service wuauserv -Force; Stop-Service bits -Force")
     ruta = os.path.expandvars(RUTA_CACHE_UPDATE)
     liberado, errores = _eliminar_contenido(ruta)
     print("  Reiniciando servicios...")
-    ejecutar_comando("net start bits")
-    ejecutar_comando("net start wuauserv")
-    print(f"✅ Caché de Windows Update limpiada: {fmt_bytes(liberado)} liberados")
+    ejecutar_powershell("Start-Service bits; Start-Service wuauserv")
+    print(f"✅ Caché de Windows Update limpiada: {fmt_bytes(liberado)} liberados"
+          + (f" ({errores} errores)" if errores else ""))
 
 
 def limpiar_componentes_windows() -> None:
@@ -122,24 +124,40 @@ def limpiar_componentes_windows() -> None:
         "dism /Online /Cleanup-Image /StartComponentCleanup",
         tiempo_espera=1800,
     )
-    print("✅ Limpieza de componentes finalizada." if codigo == 0 else "⚠️  Revisar el resultado de DISM.")
+    print("✅ Limpieza de componentes finalizada."
+          if codigo == 0 else "⚠️  Revisar el resultado de DISM.")
+
+
+# ---------------------------------------------------------------- automático
+def modo_automatico(logger) -> None:
+    """Ejecuta TODA la limpieza sin preguntas intermedias."""
+    print("\n" + "═" * 44)
+    print("  ⚡ MODO AUTOMÁTICO — LIMPIEZA COMPLETA")
+    print("═" * 44)
+    limpiar_temporales(automatico=True)
+    limpiar_prefetch(automatico=True)
+    vaciar_papelera(automatico=True)
+    limpiar_cache_windows_update(automatico=True)
+    limpiar_componentes_windows()
+    logger.info("Limpieza automática completada")
 
 
 # ---------------------------------------------------------------- menú
 def menu_limpieza(logger) -> None:
     espacio_antes = espacio_libre("C:")
     while True:
-        print("\n" + "=" * 44)
+        print("\n" + "═" * 44)
         print("  🧹 LIMPIEZA DE DISCO")
-        print("=" * 44)
+        print("═" * 44)
         print("  1) 🗒️  Archivos temporales (usuario + Windows)")
         print("  2) ⚡ Prefetch")
         print("  3) 🗑️  Papelera de reciclaje")
         print("  4) 🔄 Caché de Windows Update")
         print("  5) 🧩 Componentes obsoletos (DISM)")
         print("  6) 🧼 TODO (limpieza completa)")
+        print("  7) ⚡ MODO AUTOMÁTICO (sin preguntas)")
         print("  0) ⬅️  Volver")
-        print("=" * 44)
+        print("═" * 44)
 
         opcion = input("Seleccione una opción: ").strip()
         if opcion == "1":
@@ -159,6 +177,8 @@ def menu_limpieza(logger) -> None:
                 vaciar_papelera()
                 limpiar_cache_windows_update()
                 limpiar_componentes_windows()
+        elif opcion == "7":
+            modo_automatico(logger)
         elif opcion == "0":
             break
         else:

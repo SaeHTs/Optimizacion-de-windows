@@ -13,7 +13,8 @@ def reparar_sfc() -> None:
     print("\n🔧 Comprobando archivos del sistema (SFC)...")
     print("   Puede tardar varios minutos, no cierres la ventana.")
     codigo = ejecutar_en_vivo("sfc /scannow", tiempo_espera=1800)
-    print("✅ SFC finalizado." if codigo == 0 else "⚠️  SFC reportó problemas; revisa el log.")
+    print("✅ SFC finalizado." if codigo == 0
+          else "⚠️  SFC reportó problemas; revisa el log.")
 
 
 def reparar_dism() -> None:
@@ -26,10 +27,12 @@ def reparar_dism() -> None:
     print("✅ DISM finalizado." if codigo == 0 else "⚠️  DISM reportó problemas.")
 
 
-def optimizar_discos() -> None:
-    """Optimiza todas las unidades (desfragmenta HDD, TRIM en SSD)."""
+def optimizar_discos(automatico: bool = False) -> None:
+    """Optimiza todas las unidades (TRIM en SSD / desfragmenta HDD)."""
     print("\n🔧 Optimizando unidades...")
-    if not confirmar("¿Optimizar TODAS las unidades? (TRIM en SSD / desfragmentar HDD)"):
+    if not automatico and not confirmar(
+        "¿Optimizar TODAS las unidades? (TRIM en SSD / desfragmentar HDD)"
+    ):
         print("   Operación cancelada.")
         return
     print("   Puede tardar, según el tamaño de tus discos.")
@@ -45,22 +48,38 @@ def diagnostico_memoria() -> None:
         print("   Operación cancelada.")
         return
     print("   El equipo se reiniciará y analizará la RAM...")
+    from utils import ejecutar_comando
+
     ejecutar_comando("mdsched /restart")
+
+
+# ---------------------------------------------------------------- automático
+def modo_automatico(logger) -> None:
+    """Ejecuta SFC, DISM y optimización de discos (largo)."""
+    print("\n" + "═" * 44)
+    print("  ⚡ MODO AUTOMÁTICO — MANTENIMIENTO")
+    print("═" * 44)
+    print("   Puede tardar varios minutos, no cierres la ventana.")
+    reparar_sfc()
+    reparar_dism()
+    optimizar_discos(automatico=True)
+    logger.info("Mantenimiento automático completado")
 
 
 # ---------------------------------------------------------------- menú
 def menu_mantenimiento(logger) -> None:
     while True:
-        print("\n" + "=" * 44)
+        print("\n" + "═" * 44)
         print("  🔧 MANTENIMIENTO DEL SISTEMA")
-        print("=" * 44)
+        print("═" * 44)
         print("  1) 🛠️  Reparar archivos del sistema (SFC)")
         print("  2) 🩺 Reparar imagen de Windows (DISM)")
         print("  3) 💾 Optimizar unidades (HDD/SSD)")
         print("  4) 🧠 Comprobador de memoria RAM")
         print("  5) 🧼 Mantenimiento completo (SFC + DISM + discos)")
+        print("  6) ⚡ MODO AUTOMÁTICO (SFC + DISM + discos)")
         print("  0) ⬅️  Volver")
-        print("=" * 44)
+        print("═" * 44)
 
         opcion = input("Seleccione una opción: ").strip()
         if opcion == "1":
@@ -77,6 +96,9 @@ def menu_mantenimiento(logger) -> None:
                 reparar_sfc()
                 reparar_dism()
                 optimizar_discos()
+        elif opcion == "6":
+            proteger_cambios()
+            modo_automatico(logger)
         elif opcion == "0":
             break
         else:

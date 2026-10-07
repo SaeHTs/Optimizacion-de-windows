@@ -1,6 +1,6 @@
 # 🖥️ Optimización de windows
 
-**Proveedor:** Axiios_HTs · **Versión:** 1.1
+**Proveedor:** Axiios_HTs · **Versión:** 1.2
 
 Herramienta interactiva en **Python** para optimizar Windows: limpieza de disco,
 programas de inicio, rendimiento y mantenimiento, todo desde un menú en terminal.
@@ -94,11 +94,32 @@ Mantiene Windows sano y estable:
 
 ## ⚡ Rendimiento
 
-- **Borrado de una sola pasada** con `scandir` (sin caminata
-  previa de pre-conteo: ~15% más rápido en carpetas grandes).
+- **Borrado de una sola pasada** con `scandir` (~15% más rápido
+  en carpetas con muchos archivos).
+- **Limpieza de temporales en paralelo** (`ThreadPoolExecutor`).
 - **Salida en vivo** en SFC, DISM y desfragmentación
   (ves el progreso al instante).
 - **Consultas de servicios en paralelo** (`ThreadPoolExecutor`).
+
+## 🤖 Modo automático
+
+Opción **7** del menú principal (y en cada submenú): ejecuta
+todas las optimizaciones de la sección sin preguntas intermedias.
+
+- **Limpieza:** temporales + prefetch + papelera + caché + DISM
+- **Inicio:** deshabilita solo entradas seguras
+  (auto-lanzador de Edge, programador de Java) — reversible
+- **Rendimiento:** plan alto rendimiento + visuales + servicios
+- **Mantenimiento:** SFC + DISM + optimización de discos
+
+El modo automático global ofrece crear un **punto de restauración**
+antes de empezar. El diagnóstico de RAM queda fuera (reinicia el PC).
+
+## 🖼️ Interfaz
+
+- Pantalla de inicio (splash) con la imagen del producto
+- Colores ANSI en el menú (Windows 10+)
+- Banner con producto, proveedor y versión
 
 ## 📦 Distribución (para otros usuarios)
 
@@ -112,7 +133,7 @@ automáticamente** al abrirlo.
 |-------|-------|
 | Compañía | Axiios_HTs |
 | Producto | Optimización |
-| Versión | 1.1 |
+| Versión | 1.2 |
 | Ícono | Imagen + texto "optimización" |
 
 **Para compartirlo:**
@@ -126,8 +147,8 @@ automáticamente** al abrirlo.
 
 ```powershell
 pip install pyinstaller pillow
-python crear_icono.py "ruta\a\tu\imagen.bmp"   # tu imagen para el ícono
-pyinstaller --onefile --uac-admin --icon icono.ico --version-file version_info.txt --name Optimizacion main.py
+python crear_icono.py "ruta\a\tu\imagen.bmp"   # genera icono.ico + splash.png
+pyinstaller --onefile --uac-admin --icon icono.ico --version-file version_info.txt --add-data "splash.png;." --name Optimizacion main.py
 ```
 
 ## 📝 Logs

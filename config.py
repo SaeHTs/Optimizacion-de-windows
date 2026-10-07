@@ -22,6 +22,14 @@ SERVICIOS_OPCIONALES = {
     "Fax":               "Servicio de fax",
 }
 
+# ------------------------------------------------------------ inicio
+# Entradas de inicio seguras de deshabilitar en modo automático
+# (coinciden por prefijo: actualizadores y helpers del sistema)
+ENTRADAS_INICIO_AUTO = [
+    ("Usuario", "MicrosoftEdgeAutoLaunch"),   # auto-lanzador de Edge
+    ("Equipo 32-bit", "SunJavaUpdateSched"),  # programador de Java
+]
+
 # ------------------------------------------------------------ energía
 # Aliases reconocidos por powercfg /setactive
 PLANES_ENERGIA = {

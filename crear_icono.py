@@ -93,6 +93,32 @@ def main() -> None:
     )
     print(f"Icono creado correctamente: {SALIDA}")
 
+    # Splash para la pantalla de inicio (más grande)
+    splash = Image.new("RGBA", (512, 512), (0, 0, 0, 0))
+    img_splash = Image.open(IMAGEN).convert("RGBA")
+    img_splash.thumbnail((380, 380), Image.LANCZOS)
+    splash.paste(img_splash, ((512 - img_splash.width) // 2, 10), img_splash)
+
+    draw_splash = ImageDraw.Draw(splash)
+    fuente_splash = cargar_fuente(56)
+    bbox_s = draw_splash.textbbox((0, 0), TEXTO, font=fuente_splash)
+    ancho_s = bbox_s[2] - bbox_s[0]
+    alto_s = bbox_s[3] - bbox_s[1]
+    tx_s = (512 - ancho_s) // 2 - bbox_s[0]
+    ty_s = 512 - alto_s - 24 - bbox_s[1]
+    for dx, dy in ((-2, 0), (2, 0), (0, -2), (0, 2),
+                   (-2, -2), (2, 2), (-2, 2), (2, -2)):
+        draw_splash.text((tx_s + dx, ty_s + dy), TEXTO,
+                         font=fuente_splash, fill=(0, 0, 0, 220))
+    draw_splash.text((tx_s, ty_s), TEXTO, font=fuente_splash,
+                     fill=(255, 255, 255, 255))
+
+    ruta_splash = os.path.join(
+        os.path.dirname(os.path.abspath(SALIDA)), "splash.png"
+    )
+    splash.save(ruta_splash)
+    print(f"Splash creado correctamente: {ruta_splash}")
+
 
 if __name__ == "__main__":
     main()
