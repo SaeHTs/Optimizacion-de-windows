@@ -1,6 +1,6 @@
 """
 Optimización - Herramienta de optimización del sistema operativo
-Proveedor: Axiios_HTs | Versión: 1.3
+Proveedor: Axiios_HTs | Versión: 1.4
 Ejecutar como Administrador: python main.py
 """
 import ctypes
@@ -52,6 +52,7 @@ def main() -> None:
         sys.exit(0)
 
     # Importaciones diferidas (solo se usan dentro de Windows)
+    from modules.analisis import menu_analisis
     from modules.disk_cleanup import menu_limpieza, modo_automatico as auto_limpieza
     from modules.startup import menu_inicio, modo_automatico as auto_inicio
     from modules.performance import (
@@ -85,6 +86,7 @@ def main() -> None:
         print("  5) 🛡️  Crear punto de restauración")
         print("  6) ℹ️  Información del sistema")
         print("  7) ⚡ MODO AUTOMÁTICO (optimización completa)")
+        print("  8) 🔍 Análisis del sistema (dry-run)")
         print("  0) 🚪 Salir")
         print("═" * 50)
 
@@ -114,6 +116,8 @@ def main() -> None:
                 auto_mantenimiento(logger)
                 print("\n✅ Optimización COMPLETA finalizada.")
                 print("   Reinicia el equipo para aplicar todos los cambios.")
+        elif opcion == "8":
+            menu_analisis(logger)
         elif opcion == "0":
             print("👋 ¡Hasta luego!")
             logger.info("=== Optimización cerrado ===")

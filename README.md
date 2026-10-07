@@ -1,6 +1,6 @@
 # 🖥️ Optimización de windows
 
-**Proveedor:** Axiios_HTs · **Versión:** 1.3
+**Proveedor:** Axiios_HTs · **Versión:** 1.4
 
 Herramienta interactiva en **Python** para optimizar Windows: limpieza de disco,
 programas de inicio, rendimiento y mantenimiento, todo desde un menú en terminal.
@@ -53,6 +53,7 @@ windows-optimizer/
 ├── config.py               # Rutas, servicios seguros, planes de energía
 ├── requirements.txt        # Dependencias opcionales
 └── modules/
+    ├── analisis.py         # 🔍 Análisis de espacio + dry-run
     ├── disk_cleanup.py     # 🧹 Temporales, prefetch, papelera, DISM
     ├── startup.py          # 🚀 Programas de inicio (registro)
     ├── performance.py      # ⚡ Energía, efectos visuales, servicios
@@ -146,6 +147,18 @@ antes de empezar. El diagnóstico de RAM queda fuera (reinicia el PC).
 - Colores ANSI en el menú (Windows 10+)
 - Banner con producto, proveedor y versión
 
+## 🔍 Análisis del sistema (dry-run)
+
+Opción **8** del menú principal — **no cambia nada**:
+
+- **Análisis de espacio:** carpetas que más ocupan
+  (en paralelo), espacio recuperable conocido
+  (temporales, cachés de navegadores, papelera,
+  Windows.old) y archivos del sistema
+- **Vista previa:** qué se limpiaría, qué entradas de
+  inicio se deshabilitarían, qué cambios de rendimiento
+  se aplicarían y si SFC/DISM necesitarían reparación
+
 ## 📦 Distribución (para otros usuarios)
 
 El ejecutable standalone está en `dist/Optimizacion.exe` (7 MB aprox).
@@ -158,7 +171,7 @@ automáticamente** al abrirlo.
 |-------|-------|
 | Compañía | Axiios_HTs |
 | Producto | Optimización |
-| Versión | 1.3 |
+| Versión | 1.4 |
 | Ícono | Imagen + texto "optimización" |
 
 **Para compartirlo:**

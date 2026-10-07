@@ -76,6 +76,16 @@ def ejecutar_en_vivo_capturado(
         return -1, "".join(lineas)
 
 
+def ejecutar_en_vivo(comando: str, tiempo_espera: int = 600) -> int:
+    """Ejecuta un comando mostrando la salida en vivo.
+
+    Más rápido en percepción: el usuario ve el progreso
+    al instante. Solo devuelve el código de salida.
+    """
+    codigo, _ = ejecutar_en_vivo_capturado(comando, tiempo_espera)
+    return codigo
+
+
 # ---------------------------------------------------------------- logging
 def setup_logger() -> logging.Logger:
     """Configura el logger del proyecto (archivo optimizador.log)."""
