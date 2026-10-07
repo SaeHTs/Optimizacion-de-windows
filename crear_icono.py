@@ -4,16 +4,24 @@ Diseño: imagen en la parte superior y el texto 'optimización'
 debajo, en un lienzo cuadrado con fondo transparente.
 
 Uso: python crear_icono.py [ruta_imagen] [salida.ico]
+Si no se indica una imagen, busca la primera imagen (.bmp/.png/.jpg)
+en la carpeta del script.
 """
 import os
 import sys
 
 from PIL import Image, ImageDraw, ImageFont
 
-IMAGEN = sys.argv[1] if len(sys.argv) > 1 else r"D:\Back\image_4289c64.bmp"
-SALIDA = sys.argv[2] if len(sys.argv) > 2 else os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "icono.ico"
-)
+IMAGEN = None
+SALIDA = None
+if len(sys.argv) > 1:
+    IMAGEN = sys.argv[1]
+if len(sys.argv) > 2:
+    SALIDA = sys.argv[2]
+else:
+    SALIDA = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "icono.ico"
+    )
 
 TEXTO = "optimización"
 TAM = 256
@@ -36,8 +44,24 @@ def cargar_fuente(tamano: int) -> ImageFont.FreeTypeFont:
 
 
 def main() -> None:
+    global IMAGEN
+
+    if not IMAGEN:
+        # Busca una imagen junto al script como comodín
+        aqui = os.path.dirname(os.path.abspath(__file__))
+        for extension in ("bmp", "png", "jpg", "jpeg"):
+            encontrados = sorted(
+                f for f in os.listdir(aqui)
+                if f.lower().endswith("." + extension)
+            )
+            if encontrados:
+                IMAGEN = os.path.join(aqui, encontrados[0])
+                break
+    if not IMAGEN:
+        print("Uso: python crear_icono.py [ruta_imagen] [salida.ico]")
+        sys.exit(1)
     if not os.path.exists(IMAGEN):
-        print(f"❌ No se encontró la imagen: {IMAGEN}")
+        print(f"No se encontró la imagen: {IMAGEN}")
         sys.exit(1)
 
     # Imagen: escalada para ocupar la parte superior del ícono
@@ -56,9 +80,11 @@ def main() -> None:
     tx = (TAM - ancho) // 2 - bbox[0]
     ty = TAM - alto - 12 - bbox[1]
 
-    # Contorno oscuro para legibilidad + texto blanco
-    for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (1, 1), (-1, 1), (1, -1)):
-        draw.text((tx + dx, ty + dy), TEXTO, font=fuente, fill=(0, 0, 0, 220))
+    # Contorno oscuro para legibilidad + texto blanca
+    for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1),
+                   (-1, -1), (1, 1), (-1, 1), (1, -1)):
+        draw.text((tx + dx, ty + dy), TEXTO, font=fuente,
+                  fill=(0, 0, 0, 220))
     draw.text((tx, ty), TEXTO, font=fuente, fill=(255, 255, 255, 255))
 
     canvas.save(

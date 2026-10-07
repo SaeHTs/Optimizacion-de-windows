@@ -24,10 +24,13 @@ programas de inicio, rendimiento y mantenimiento, todo desde un menú en termina
 ## 🚀 Uso
 
 ```powershell
-cd "C:\Users\Sae\Documents\Default Project\windows-optimizer"
+cd Optimizacion     # la carpeta donde clonaste o descargaste el repo
 pip install -r requirements.txt   # opcional: psutil para info del sistema
 python main.py
 ```
+
+> 💡 La mayoría de usuarios prefieren descargar el `.exe`
+> desde la sección **Releases** (no necesitan Python).
 
 ## 📂 Estructura
 
@@ -115,7 +118,7 @@ automáticamente** al abrirlo.
 
 ```powershell
 pip install pyinstaller pillow
-python crear_icono.py "D:\Back\image_4289c64.bmp"
+python crear_icono.py "ruta\a\tu\imagen.bmp"   # tu imagen para el ícono
 pyinstaller --onefile --uac-admin --icon icono.ico --version-file version_info.txt --name Optimizacion main.py
 ```
 
