@@ -1,0 +1,14 @@
+# Logs
+*.log
+optimizador.log
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Windows
+Thumbs.db
+desktop.ini
