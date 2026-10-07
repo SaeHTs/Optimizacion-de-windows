@@ -1,4 +1,6 @@
-# 🖥️ Optimizador de Windows
+# 🖥️ Optimización
+
+**Proveedor:** Axiios_HTs · **Versión:** 1.0
 
 Herramienta interactiva en **Python** para optimizar Windows: limpieza de disco,
 programas de inicio, rendimiento y mantenimiento, todo desde un menú en terminal.
@@ -48,9 +50,18 @@ windows-optimizer/
 
 ## 📦 Distribución (para otros usuarios)
 
-El ejecutable standalone está en `dist/OptimizadorWindows.exe` (7 MB aprox).
+El ejecutable standalone está en `dist/Optimizacion.exe` (7 MB aprox).
 No requiere Python instalado y **solicita permisos de Administrador
 automáticamente** al abrirlo.
+
+**Datos del programa (Propiedades → Detalles):**
+
+| Campo | Valor |
+|-------|-------|
+| Compañía | Axiios_HTs |
+| Producto | Optimización |
+| Versión | 1.0 |
+| Ícono | Imagen + texto "optimización" |
 
 **Para compartirlo:**
 
@@ -62,8 +73,9 @@ automáticamente** al abrirlo.
 **Para reconstruir el exe:**
 
 ```powershell
-pip install pyinstaller
-pyinstaller --onefile --uac-admin --name OptimizadorWindows main.py
+pip install pyinstaller pillow
+python crear_icono.py "D:\Back\image_4289c64.bmp"
+pyinstaller --onefile --uac-admin --icon icono.ico --version-file version_info.txt --name Optimizacion main.py
 ```
 
 ## 📝 Logs

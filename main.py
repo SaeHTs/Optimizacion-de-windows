@@ -1,10 +1,18 @@
 """
 Optimizador de Windows - Herramienta de optimización del sistema operativo
+Proveedor: Axiios_HTs | Versión: 1.0
 Ejecutar como Administrador: python main.py
 """
 import ctypes
 import os
 import sys
+
+# Forzar UTF-8 con respaldo seguro: los emojis nunca crashean la app
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except Exception:  # pragma: no cover
+    pass
 
 
 def es_administrador() -> bool:
