@@ -5,6 +5,18 @@
 Herramienta interactiva en **Python** para optimizar Windows: limpieza de disco,
 programas de inicio, rendimiento y mantenimiento, todo desde un menú en terminal.
 
+## 💻 Compatibilidad
+
+| Requisito | Detalle |
+|-----------|---------|
+| Sistema operativo | **Windows 10** y **Windows 11** |
+| Arquitectura | 64 bits (x64) |
+| Permisos | Administrador (UAC) |
+| Dependencias | Ninguna (exe standalone) |
+| Código fuente | Python 3.10+ |
+
+> ⚠️ No compatible con Windows 7/8, macOS ni Linux.
+
 ## 🔗 Enlaces
 
 - 📁 Repositorio: https://github.com/SaeHTs/Optimizacion-de-windows
