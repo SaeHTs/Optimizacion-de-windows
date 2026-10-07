@@ -1,5 +1,5 @@
 ﻿# Metadatos del ejecutable (recurso de versiÃ³n de Windows)
-# Proveedor: Axiios_HTs | VersiÃ³n: 1.0 | Sin correo electrÃ³nico
+# Proveedor: Axiios_HTs | VersiÃ³n: 1.5.1 | Sin correo electrÃ³nico
 VSVersionInfo(
   ffi=FixedFileInfo(
     filevers=(1, 5, 1, 0),
