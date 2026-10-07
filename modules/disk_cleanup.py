@@ -2,7 +2,12 @@
 import os
 from concurrent.futures import ThreadPoolExecutor
 
-from config import RUTA_CACHE_UPDATE, RUTA_PREFETCH, RUTAS_TEMPORALES
+from config import (
+    RUTA_CACHE_ENTREGA,
+    RUTA_CACHE_UPDATE,
+    RUTA_PREFETCH,
+    RUTAS_TEMPORALES,
+)
 from utils import (
     confirmar,
     ejecutar_en_vivo,
@@ -110,6 +115,11 @@ def limpiar_cache_windows_update(automatico: bool = False) -> None:
     ejecutar_powershell("Stop-Service wuauserv -Force; Stop-Service bits -Force")
     ruta = os.path.expandvars(RUTA_CACHE_UPDATE)
     liberado, errores = _eliminar_contenido(ruta)
+    # Caché de optimización de entrega (puede ocupar GB)
+    ruta_entrega = os.path.expandvars(RUTA_CACHE_ENTREGA)
+    liberado_entrega, errores_entrega = _eliminar_contenido(ruta_entrega)
+    liberado += liberado_entrega
+    errores += errores_entrega
     print("  Reiniciando servicios...")
     ejecutar_powershell("Start-Service bits; Start-Service wuauserv")
     print(f"✅ Caché de Windows Update limpiada: {fmt_bytes(liberado)} liberados"

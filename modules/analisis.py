@@ -46,8 +46,6 @@ RUTAS_LIMPIABLES = [
     ("Caché de Edge",
      os.path.expandvars(
          r"%LOCALAPPDATA%\Microsoft\Edge\User Data\Default\Cache")),
-    ("Caché de Firefox",
-     os.path.expandvars(r"%APPDATA%\Mozilla\Firefox\Profiles")),
     ("Windows.old (actualización anterior)",
      os.path.expandvars(r"%SYSTEMDRIVE%\Windows.old")),
 ]
@@ -87,6 +85,21 @@ def _tamano_papelera() -> int:
         return int(salida.strip().splitlines()[-1])
     except (ValueError, IndexError):
         return 0
+
+
+def _tamano_cache_firefox() -> int:
+    """Tamaño de la caché de Firefox (solo carpetas cache2,
+    no el perfil completo: marcadores, extensiones, etc.)."""
+    base = os.path.expandvars(r"%APPDATA%\Mozilla\Firefox\Profiles")
+    total = 0
+    if not os.path.isdir(base):
+        return 0
+    for perfil in os.scandir(base):
+        if perfil.is_dir(follow_symlinks=False):
+            cache = os.path.join(perfil.path, "cache2")
+            if os.path.isdir(cache):
+                total += _tamano_recursivo(cache)
+    return total
 
 
 # ---------------------------------------------------------------- análisis
@@ -131,6 +144,10 @@ def analisis_espacio() -> None:
     papelera = _tamano_papelera()
     total_recuperable += papelera
     print(f"  {fmt_bytes(papelera):>10}  🗑️  Papelera de reciclaje")
+    firefox = _tamano_cache_firefox()
+    if firefox > 0:
+        total_recuperable += firefox
+        print(f"  {fmt_bytes(firefox):>10}  Caché de Firefox (cache2)")
     print(f"\n✅ Total recuperable estimado: {fmt_bytes(total_recuperable)}")
 
     # Archivos del sistema (informativo)

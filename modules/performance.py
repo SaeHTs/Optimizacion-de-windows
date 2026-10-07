@@ -74,6 +74,8 @@ def _estado_servicio(nombre: str) -> str:
 
 def _estados_servicios(nombres: list[str]) -> dict[str, str]:
     """Consulta el estado de varios servicios en paralelo."""
+    if not nombres:
+        return {}
     with ThreadPoolExecutor(max_workers=min(len(nombres), 8)) as ejecutor:
         resultados = ejecutor.map(_estado_servicio, nombres)
     return dict(zip(nombres, resultados))

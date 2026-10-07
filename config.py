@@ -9,6 +9,7 @@ RUTAS_TEMPORALES = [
 
 RUTA_PREFETCH = "%WINDIR%\\Prefetch"       # Windows lo reconstruye solo
 RUTA_CACHE_UPDATE = "%WINDIR%\\SoftwareDistribution\\Download"
+RUTA_CACHE_ENTREGA = "%WINDIR%\\SoftwareDistribution\\DeliveryOptimization"
 
 # ------------------------------------------------------------ servicios
 # Servicios considerados seguros de deshabilitar en un equipo doméstico típico.
