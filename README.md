@@ -206,15 +206,6 @@ winget install JRSoftware.InnoSetup   # si no lo tienes
 "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" setup.iss
 ```
 
-## 🛠️ Solución de problemas
-
-| Problema | Solución |
-|----------|----------|
-| **Error 740** al instalar | Usar la **v1.5.1+**: el instalador es **por usuario** y no pide Administrador (los exe se elevan solos con UAC al ejecutarse) |
-| SmartScreen bloquea el exe | *"Más información"* → *"Ejecutar de todos modos"* (exe sin firmar) |
-| No puede optimizar | Los exe piden permisos de Administrador (UAC) solos; aceptar el aviso |
-| No aparecen cambios | Reiniciar el equipo después de optimizar |
-
 ## 📦 Distribución (para otros usuarios)
 
 **Tres productos listos para distribuir:**
@@ -257,23 +248,4 @@ pyinstaller --onefile --noconsole --uac-admin --icon icono.ico --version-file ve
 
 Todas las acciones quedan registradas en `optimizador.log`.
 
-## ➕ Ideas para ampliar
 
-- Auto-updater (avisa cuando hay versión nueva)
-- Publicar en winget (`winget install Axiios_HTs.Optimizacion`)
-- Multi-idioma (español/inglés)
-- Limpieza de navegadores con confirmación
-- Exportar/importar configuración aplicada
-
-## 📜 Historial de versiones
-
-| Versión | Novedad |
-|---------|---------|
-| 1.5.1 | Instalador por usuario (soluciona error 740) |
-| 1.5 | GUI con tema oscuro + instalador (Inno Setup) |
-| 1.4.1 | Correcciones (Firefox cache2, edge case, entrega) |
-| 1.4 | Análisis de espacio + modo dry-run |
-| 1.3 | Mantenimiento inteligente (verifica primero) |
-| 1.2 | Modo automático + interfaz (splash, colores) |
-| 1.1 | Velocidad (scandir, salida en vivo, paralelismo) |
-| 1.0 | Base: 4 módulos + ejecutable branded |
