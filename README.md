@@ -1,6 +1,6 @@
 # 🖥️ Optimización de windows
 
-**Proveedor:** Axiios_HTs · **Versión:** 1.5
+**Proveedor:** Axiios_HTs · **Versión:** 1.5.1
 
 Herramienta interactiva en **Python** para optimizar Windows: limpieza de disco,
 programas de inicio, rendimiento y mantenimiento, todo desde un menú en terminal.
@@ -186,7 +186,9 @@ python gui.py
 ## 📦 Instalador (Inno Setup)
 
 Genera `installer\Optimizacion-Setup.exe` con:
-- Ambos ejecutables en `C:\Program Files\Optimizacion`
+- Ambos ejecutables en `%LOCALAPPDATA%\Programs\Optimizacion`
+  (**instalación por usuario: no pide Administrador** —
+  soluciona el error 740; los exe se elevan solos con UAC)
 - Accesos directos (escritorio y menú Inicio)
 - Desinstalador
 - Licencia MIT y ejecutar al finalizar
@@ -197,6 +199,15 @@ Genera `installer\Optimizacion-Setup.exe` con:
 winget install JRSoftware.InnoSetup   # si no lo tienes
 "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" setup.iss
 ```
+
+## 🛠️ Solución de problemas
+
+| Problema | Solución |
+|----------|----------|
+| **Error 740** al instalar | Usar la **v1.5.1+**: el instalador es **por usuario** y no pide Administrador (los exe se elevan solos con UAC al ejecutarse) |
+| SmartScreen bloquea el exe | *"Más información"* → *"Ejecutar de todos modos"* (exe sin firmar) |
+| No puede optimizar | Los exe piden permisos de Administrador (UAC) solos; aceptar el aviso |
+| No aparecen cambios | Reiniciar el equipo después de optimizar |
 
 ## 📦 Distribución (para otros usuarios)
 
@@ -210,7 +221,7 @@ automáticamente** al abrirlo.
 |-------|-------|
 | Compañía | Axiios_HTs |
 | Producto | Optimización |
-| Versión | 1.5 |
+| Versión | 1.5.1 |
 | Ícono | Imagen + texto "optimización" |
 
 **Para compartirlo:**
