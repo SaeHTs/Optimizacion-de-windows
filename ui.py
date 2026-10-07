@@ -3,7 +3,7 @@ import ctypes
 import os
 import sys
 
-VERSION = "1.2"
+VERSION = "1.3"
 PRODUCTO = "Optimización"
 PROVEEDOR = "Axiios_HTs"
 

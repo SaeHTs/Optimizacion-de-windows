@@ -40,12 +40,16 @@ def ejecutar_powershell(script: str, tiempo_espera: int = 600) -> tuple[int, str
     )
 
 
-def ejecutar_en_vivo(comando: str, tiempo_espera: int = 600) -> int:
-    """Ejecuta un comando mostrando la salida en vivo (operaciones largas).
+def ejecutar_en_vivo_capturado(
+    comando: str, tiempo_espera: int = 600
+) -> tuple[int, str]:
+    """Ejecuta mostrando la salida en vivo y además la devuelve.
 
-    Más rápido en percepción: el usuario ve el progreso al instante.
+    Útil para operaciones largas cuyo resultado hay que analizar
+    (por ejemplo, sfc /verifyonly).
     """
     proceso = None
+    lineas: list[str] = []
     try:
         proceso = subprocess.Popen(
             comando,
@@ -60,15 +64,16 @@ def ejecutar_en_vivo(comando: str, tiempo_espera: int = 600) -> int:
         if proceso.stdout:
             for linea in proceso.stdout:
                 if linea.strip():
+                    lineas.append(linea)
                     print(f"   {linea.rstrip()}")
         proceso.wait(timeout=tiempo_espera)
-        return proceso.returncode if proceso.returncode is not None else -1
+        return proceso.returncode if proceso.returncode is not None else -1, "".join(lineas)
     except subprocess.TimeoutExpired:
         if proceso:
             proceso.kill()
-        return -1
+        return -1, "".join(lineas)
     except Exception:
-        return -1
+        return -1, "".join(lineas)
 
 
 # ---------------------------------------------------------------- logging

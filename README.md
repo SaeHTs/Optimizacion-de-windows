@@ -1,6 +1,6 @@
 # 🖥️ Optimización de windows
 
-**Proveedor:** Axiios_HTs · **Versión:** 1.2
+**Proveedor:** Axiios_HTs · **Versión:** 1.3
 
 Herramienta interactiva en **Python** para optimizar Windows: limpieza de disco,
 programas de inicio, rendimiento y mantenimiento, todo desde un menú en terminal.
@@ -112,6 +112,19 @@ todas las optimizaciones de la sección sin preguntas intermedias.
 - **Rendimiento:** plan alto rendimiento + visuales + servicios
 - **Mantenimiento:** SFC + DISM + optimización de discos
 
+### 🔧 Mantenimiento inteligente (v1.3)
+
+El modo automático de mantenimiento **verifica primero**:
+
+1. `sfc /verifyonly` y `DISM /CheckHealth` **en paralelo**
+   (ambas son de solo lectura)
+2. Solo repara lo que está dañado — si el sistema está
+   íntegro, **no ejecuta** los SFC/DISM completos
+   (de 5–15 min a ~2 min en PCs sanos)
+3. Repara **DISM antes que SFC**: un almacén de
+   componentes sano hace que SFC acierte a la primera
+4. Al final, optimiza discos (TRIM/defrag)
+
 El modo automático global ofrece crear un **punto de restauración**
 antes de empezar. El diagnóstico de RAM queda fuera (reinicia el PC).
 
@@ -133,7 +146,7 @@ automáticamente** al abrirlo.
 |-------|-------|
 | Compañía | Axiios_HTs |
 | Producto | Optimización |
-| Versión | 1.2 |
+| Versión | 1.3 |
 | Ícono | Imagen + texto "optimización" |
 
 **Para compartirlo:**
