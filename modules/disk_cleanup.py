@@ -1,11 +1,11 @@
 """🧹 Módulo 1: Limpieza de disco."""
 import os
-import shutil
 
 from config import RUTA_CACHE_UPDATE, RUTA_PREFETCH, RUTAS_TEMPORALES
 from utils import (
     confirmar,
     ejecutar_comando,
+    ejecutar_en_vivo,
     ejecutar_powershell,
     espacio_libre,
     fmt_bytes,
@@ -27,20 +27,36 @@ def _tamano_carpeta(ruta: str) -> int:
 
 
 def _eliminar_contenido(ruta: str) -> tuple[int, int]:
-    """Elimina el contenido de una carpeta. Devuelve (bytes liberados, errores)."""
-    liberado = _tamano_carpeta(ruta)
+    """Elimina el contenido de una carpeta en UNA sola pasada.
+
+    Cuenta los bytes liberados mientras borra (scandir es más
+    rápido que os.walk y evita la caminata previa de pre-conteo,
+    que duplicaba el tiempo en carpetas con muchos archivos).
+    """
+    liberado = 0
     errores = 0
-    for dirpath, dirnames, archivos in os.walk(ruta):
-        for archivo in archivos:
-            try:
-                os.remove(os.path.join(dirpath, archivo))
-            except OSError:
-                errores += 1
-        for subcarpeta in dirnames:
-            try:
-                shutil.rmtree(os.path.join(dirpath, subcarpeta))
-            except OSError:
-                errores += 1
+    try:
+        entradas = list(os.scandir(ruta))
+    except OSError:
+        return 0, 0
+
+    for entrada in entradas:
+        try:
+            if entrada.is_dir(follow_symlinks=False):
+                # Recursión de una sola pasada por subcarpeta
+                sub_liberado, sub_errores = _eliminar_contenido(entrada.path)
+                liberado += sub_liberado
+                errores += sub_errores
+                try:
+                    os.rmdir(entrada.path)
+                except OSError:
+                    errores += 1
+            else:
+                liberado += entrada.stat().st_size
+                os.remove(entrada.path)
+        except OSError:
+            errores += 1
+
     return liberado, errores
 
 
@@ -102,11 +118,10 @@ def limpiar_componentes_windows() -> None:
     """Ejecuta DISM para limpiar componentes obsoletos de Windows."""
     print("\n🧹 Limpiando componentes obsoletos de Windows (DISM)...")
     print("   Puede tardar varios minutos, no cierres la ventana.")
-    codigo, salida = ejecutar_comando(
-        "dism /Online /Cleanup-Image /StartComponentCleanup", tiempo_espera=1800
+    codigo = ejecutar_en_vivo(
+        "dism /Online /Cleanup-Image /StartComponentCleanup",
+        tiempo_espera=1800,
     )
-    if salida:
-        print(f"   {salida}")
     print("✅ Limpieza de componentes finalizada." if codigo == 0 else "⚠️  Revisar el resultado de DISM.")
 
 

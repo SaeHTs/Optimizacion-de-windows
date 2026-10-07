@@ -40,6 +40,37 @@ def ejecutar_powershell(script: str, tiempo_espera: int = 600) -> tuple[int, str
     )
 
 
+def ejecutar_en_vivo(comando: str, tiempo_espera: int = 600) -> int:
+    """Ejecuta un comando mostrando la salida en vivo (operaciones largas).
+
+    Más rápido en percepción: el usuario ve el progreso al instante.
+    """
+    proceso = None
+    try:
+        proceso = subprocess.Popen(
+            comando,
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            creationflags=subprocess.CREATE_NO_WINDOW,
+        )
+        if proceso.stdout:
+            for linea in proceso.stdout:
+                if linea.strip():
+                    print(f"   {linea.rstrip()}")
+        proceso.wait(timeout=tiempo_espera)
+        return proceso.returncode if proceso.returncode is not None else -1
+    except subprocess.TimeoutExpired:
+        if proceso:
+            proceso.kill()
+        return -1
+    except Exception:
+        return -1
+
+
 # ---------------------------------------------------------------- logging
 def setup_logger() -> logging.Logger:
     """Configura el logger del proyecto (archivo optimizador.log)."""

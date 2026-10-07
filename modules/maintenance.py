@@ -1,7 +1,7 @@
 """🔧 Módulo 4: Mantenimiento del sistema."""
 from utils import (
     confirmar,
-    ejecutar_comando,
+    ejecutar_en_vivo,
     pausa,
     proteger_cambios,
 )
@@ -12,11 +12,7 @@ def reparar_sfc() -> None:
     """Ejecuta el comprobador de archivos del sistema."""
     print("\n🔧 Comprobando archivos del sistema (SFC)...")
     print("   Puede tardar varios minutos, no cierres la ventana.")
-    codigo, salida = ejecutar_comando("sfc /scannow", tiempo_espera=1800)
-    if salida:
-        for linea in salida.splitlines():
-            if linea.strip():
-                print(f"   {linea}")
+    codigo = ejecutar_en_vivo("sfc /scannow", tiempo_espera=1800)
     print("✅ SFC finalizado." if codigo == 0 else "⚠️  SFC reportó problemas; revisa el log.")
 
 
@@ -24,13 +20,9 @@ def reparar_dism() -> None:
     """Repara la imagen de Windows con DISM."""
     print("\n🔧 Reparando la imagen de Windows (DISM)...")
     print("   Puede tardar varios minutos, no cierres la ventana.")
-    codigo, salida = ejecutar_comando(
+    codigo = ejecutar_en_vivo(
         "DISM /Online /Cleanup-Image /RestoreHealth", tiempo_espera=1800
     )
-    if salida:
-        for linea in salida.splitlines():
-            if linea.strip():
-                print(f"   {linea}")
     print("✅ DISM finalizado." if codigo == 0 else "⚠️  DISM reportó problemas.")
 
 
@@ -41,11 +33,7 @@ def optimizar_discos() -> None:
         print("   Operación cancelada.")
         return
     print("   Puede tardar, según el tamaño de tus discos.")
-    codigo, salida = ejecutar_comando("defrag /C /O /U", tiempo_espera=3600)
-    if salida:
-        for linea in salida.splitlines():
-            if linea.strip():
-                print(f"   {linea}")
+    codigo = ejecutar_en_vivo("defrag /C /O /U", tiempo_espera=3600)
     print("✅ Optimización de discos finalizada."
           if codigo == 0 else "⚠️  Revisar el resultado de la optimización.")
 

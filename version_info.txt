@@ -2,8 +2,8 @@
 # Proveedor: Axiios_HTs | Versión: 1.0 | Sin correo electrónico
 VSVersionInfo(
   ffi=FixedFileInfo(
-    filevers=(1, 0, 0, 0),
-    prodvers=(1, 0, 0, 0),
+    filevers=(1, 1, 0, 0),
+    prodvers=(1, 1, 0, 0),
     mask=0x3f,
     flags=0x0,
     OS=0x40004,
@@ -19,12 +19,12 @@ VSVersionInfo(
           [
             StringStruct('CompanyName', 'Axiios_HTs'),
             StringStruct('FileDescription', 'Optimización - Optimizador de Windows'),
-            StringStruct('FileVersion', '1.0'),
+            StringStruct('FileVersion', '1.1'),
             StringStruct('InternalName', 'Optimizacion'),
             StringStruct('LegalCopyright', 'Axiios_HTs'),
             StringStruct('OriginalFilename', 'Optimizacion.exe'),
             StringStruct('ProductName', 'Optimización'),
-            StringStruct('ProductVersion', '1.0'),
+            StringStruct('ProductVersion', '1.1'),
           ]
         )
       ]

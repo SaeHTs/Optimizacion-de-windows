@@ -1,6 +1,6 @@
 # 🖥️ Optimización de windows
 
-**Proveedor:** Axiios_HTs · **Versión:** 1.0
+**Proveedor:** Axiios_HTs · **Versión:** 1.1
 
 Herramienta interactiva en **Python** para optimizar Windows: limpieza de disco,
 programas de inicio, rendimiento y mantenimiento, todo desde un menú en terminal.
@@ -92,6 +92,14 @@ Mantiene Windows sano y estable:
 - **Optimizar unidades:** TRIM en SSD / desfragmentación en HDD.
 - **Diagnóstico de memoria:** programa el análisis de RAM al reiniciar.
 
+## ⚡ Rendimiento
+
+- **Borrado de una sola pasada** con `scandir` (sin caminata
+  previa de pre-conteo: ~15% más rápido en carpetas grandes).
+- **Salida en vivo** en SFC, DISM y desfragmentación
+  (ves el progreso al instante).
+- **Consultas de servicios en paralelo** (`ThreadPoolExecutor`).
+
 ## 📦 Distribución (para otros usuarios)
 
 El ejecutable standalone está en `dist/Optimizacion.exe` (7 MB aprox).
@@ -104,7 +112,7 @@ automáticamente** al abrirlo.
 |-------|-------|
 | Compañía | Axiios_HTs |
 | Producto | Optimización |
-| Versión | 1.0 |
+| Versión | 1.1 |
 | Ícono | Imagen + texto "optimización" |
 
 **Para compartirlo:**

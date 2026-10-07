@@ -1,6 +1,7 @@
 """⚡ Módulo 3: Rendimiento general."""
 import re
 import winreg
+from concurrent.futures import ThreadPoolExecutor
 
 from config import PLANES_ENERGIA, SERVICIOS_OPCIONALES
 from utils import (
@@ -69,13 +70,21 @@ def _estado_servicio(nombre: str) -> str:
     return "?"
 
 
+def _estados_servicios(nombres: list[str]) -> dict[str, str]:
+    """Consulta el estado de varios servicios en paralelo."""
+    with ThreadPoolExecutor(max_workers=min(len(nombres), 8)) as ejecutor:
+        resultados = ejecutor.map(_estado_servicio, nombres)
+    return dict(zip(nombres, resultados))
+
+
 def gestionar_servicios(deshabilitar: bool = True) -> None:
     """Deshabilita o restaura los servicios opcionales de la lista."""
+    nombres = list(SERVICIOS_OPCIONALES)
     accion = "Deshabilitar" if deshabilitar else "Restaurar (manual)"
     print(f"\n🔧 {accion} servicios opcionales:")
+    estados = _estados_servicios(nombres)
     for nombre, descripcion in SERVICIOS_OPCIONALES.items():
-        estado = _estado_servicio(nombre)
-        print(f"  • {nombre:<18} {descripcion:<45} [{estado}]")
+        print(f"  • {nombre:<18} {descripcion:<45} [{estados.get(nombre, '?')}]")
 
     if not confirmar(f"¿{accion} los servicios seleccionados?"):
         print("   Operación cancelada.")
