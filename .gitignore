@@ -14,6 +14,9 @@ build/
 *.spec
 dist/
 
+# Inno Setup
+installer/
+
 # Windows
 Thumbs.db
 desktop.ini

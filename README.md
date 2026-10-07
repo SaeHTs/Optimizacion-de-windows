@@ -1,6 +1,6 @@
 # 🖥️ Optimización de windows
 
-**Proveedor:** Axiios_HTs · **Versión:** 1.4.1
+**Proveedor:** Axiios_HTs · **Versión:** 1.5
 
 Herramienta interactiva en **Python** para optimizar Windows: limpieza de disco,
 programas de inicio, rendimiento y mantenimiento, todo desde un menú en terminal.
@@ -48,9 +48,13 @@ python main.py
 
 ```
 windows-optimizer/
-├── main.py                 # Punto de entrada + menú principal
+├── main.py                 # Consola: punto de entrada + menú
+├── gui.py                  # 🖥️ GUI: interfaz gráfica (Tkinter)
+├── ui.py                   # Interfaz: colores, banner, splash
 ├── utils.py                # Ejecución de comandos, logs, seguridad
 ├── config.py               # Rutas, servicios seguros, planes de energía
+├── setup.iss               # 📦 Script del instalador (Inno Setup)
+├── LICENSE.txt             # Licencia MIT
 ├── requirements.txt        # Dependencias opcionales
 └── modules/
     ├── analisis.py         # 🔍 Análisis de espacio + dry-run
@@ -167,6 +171,33 @@ Opción **8** del menú principal — **no cambia nada**:
 - La **optimización de entrega** de Windows Update ahora
   se limpia (antes solo aparecía en el análisis)
 
+## 🖥️ Interfaz gráfica (GUI)
+
+Versión con ventana (tema oscuro, log en vivo, sin congelarse):
+
+```powershell
+python gui.py
+```
+
+**Ejecutables resultantes:**
+- `dist\Optimizacion.exe` — versión consola (menú en terminal)
+- `dist\Optimizacion-GUI.exe` — versión gráfica (sin ventana de consola)
+
+## 📦 Instalador (Inno Setup)
+
+Genera `installer\Optimizacion-Setup.exe` con:
+- Ambos ejecutables en `C:\Program Files\Optimizacion`
+- Accesos directos (escritorio y menú Inicio)
+- Desinstalador
+- Licencia MIT y ejecutar al finalizar
+
+**Para compilar el instalador:**
+
+```powershell
+winget install JRSoftware.InnoSetup   # si no lo tienes
+"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" setup.iss
+```
+
 ## 📦 Distribución (para otros usuarios)
 
 El ejecutable standalone está en `dist/Optimizacion.exe` (7 MB aprox).
@@ -179,7 +210,7 @@ automáticamente** al abrirlo.
 |-------|-------|
 | Compañía | Axiios_HTs |
 | Producto | Optimización |
-| Versión | 1.4.1 |
+| Versión | 1.5 |
 | Ícono | Imagen + texto "optimización" |
 
 **Para compartirlo:**
@@ -189,12 +220,13 @@ automáticamente** al abrirlo.
    (el exe no está firmado digitalmente): click en *"Más información"*
    → *"Ejecutar de todos modos"*.
 
-**Para reconstruir el exe:**
+**Para reconstruir los exe:**
 
 ```powershell
 pip install pyinstaller pillow
 python crear_icono.py "ruta\a\tu\imagen.bmp"   # genera icono.ico + splash.png
 pyinstaller --onefile --uac-admin --icon icono.ico --version-file version_info.txt --add-data "splash.png;." --name Optimizacion main.py
+pyinstaller --onefile --noconsole --uac-admin --icon icono.ico --version-file version_info.txt --add-data "splash.png;." --name Optimizacion-GUI gui.py
 ```
 
 ## 📝 Logs

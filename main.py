@@ -1,6 +1,6 @@
 """
 Optimización - Herramienta de optimización del sistema operativo
-Proveedor: Axiios_HTs | Versión: 1.4.1
+Proveedor: Axiios_HTs | Versión: 1.5
 Ejecutar como Administrador: python main.py
 """
 import ctypes
