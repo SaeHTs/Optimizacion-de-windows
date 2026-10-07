@@ -53,6 +53,42 @@ windows-optimizer/
 | Rendimiento | Planes de energía, efectos visuales, servicios opcionales |
 | Mantenimiento | SFC, DISM RestoreHealth, optimización de discos (TRIM/HDD), diagnóstico de RAM |
 
+## 📋 Descripción de las utilidades
+
+### 🧹 Limpieza de disco
+Libera espacio eliminando archivos innecesarios:
+- **Archivos temporales:** vacía `%TEMP%` (usuario) y `C:\Windows\Temp`.
+  Los archivos en uso se omiten automáticamente.
+- **Prefetch:** elimina archivos de precarga; Windows los regenera solo.
+- **Papelera de reciclaje:** vacía todas las unidades.
+- **Caché de Windows Update:** detiene los servicios, borra
+  `C:\Windows\SoftwareDistribution\Download` y los reinicia.
+- **Componentes obsoletos (DISM):** elimina copias antiguas de componentes
+  de Windows; puede liberar varios GB.
+
+### 🚀 Optimizar programas de inicio
+Acelera el arranque del equipo:
+- **Listar:** muestra las entradas `Run` del registro (usuario, equipo y
+  32-bit) y las carpetas de inicio.
+- **Deshabilitar:** renombra la entrada con prefijo `DISABLED_` (reversible).
+- **Habilitar:** revierte el cambio anterior.
+
+### ⚡ Rendimiento general
+Ajusta el sistema para mayor velocidad:
+- **Planes de energía:** Alto rendimiento, Equilibrado o Ahorro de energía.
+- **Efectos visuales:** prioriza el rendimiento (animaciones y transparencias
+  reducidas) o restaura el modo automático.
+- **Servicios opcionales:** deshabilita servicios no esenciales en un equipo
+  doméstico (telemetría, fax, WAP push, registro remoto, etc.) y permite
+  restaurarlos.
+
+### 🔧 Mantenimiento del sistema
+Mantiene Windows sano y estable:
+- **SFC (`sfc /scannow`):** repara archivos del sistema protegidos.
+- **DISM (`RestoreHealth`):** repara la imagen de Windows.
+- **Optimizar unidades:** TRIM en SSD / desfragmentación en HDD.
+- **Diagnóstico de memoria:** programa el análisis de RAM al reiniciar.
+
 ## 📦 Distribución (para otros usuarios)
 
 El ejecutable standalone está en `dist/Optimizacion.exe` (7 MB aprox).
