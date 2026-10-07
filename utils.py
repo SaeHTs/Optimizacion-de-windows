@@ -4,9 +4,15 @@ import logging
 import os
 import shutil
 import subprocess
+import sys
 from datetime import datetime
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# En el exe congelado, __file__ apunta a la carpeta temporal _MEIxxxx
+# (se borra al salir): el log debe ir junto al ejecutable.
+if getattr(sys, "frozen", False):
+    BASE_DIR = os.path.dirname(sys.executable)
+else:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 LOG_FILE = os.path.join(BASE_DIR, "optimizador.log")
 
 
