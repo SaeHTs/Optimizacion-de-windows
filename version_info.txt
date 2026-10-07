@@ -1,9 +1,9 @@
 ﻿# Metadatos del ejecutable (recurso de versiÃ³n de Windows)
-# Proveedor: Axiios_HTs | VersiÃ³n: 1.5.1 | Sin correo electrÃ³nico
+# Proveedor: Axiios_HTs | VersiÃ³n: 1.5.2 | Sin correo electrÃ³nico
 VSVersionInfo(
   ffi=FixedFileInfo(
-    filevers=(1, 5, 1, 0),
-    prodvers=(1, 5, 1, 0),
+    filevers=(1, 5, 2, 0),
+    prodvers=(1, 5, 2, 0),
     mask=0x3f,
     flags=0x0,
     OS=0x40004,
@@ -19,12 +19,12 @@ VSVersionInfo(
           [
             StringStruct('CompanyName', 'Axiios_HTs'),
             StringStruct('FileDescription', 'OptimizaciÃ³n - Optimizador de Windows'),
-            StringStruct('FileVersion', '1.5.1'),
+            StringStruct('FileVersion', '1.5.2'),
             StringStruct('InternalName', 'Optimizacion'),
             StringStruct('LegalCopyright', 'Axiios_HTs'),
             StringStruct('OriginalFilename', 'Optimizacion.exe'),
             StringStruct('ProductName', 'OptimizaciÃ³n'),
-            StringStruct('ProductVersion', '1.5.1'),
+            StringStruct('ProductVersion', '1.5.2'),
           ]
         )
       ]

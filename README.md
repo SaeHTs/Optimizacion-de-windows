@@ -1,6 +1,6 @@
 # 🖥️ Optimización de windows
 
-**Proveedor:** Axiios_HTs · **Versión:** 1.5.1
+**Proveedor:** Axiios_HTs · **Versión:** 1.5.2
 
 Herramienta en **Python** para optimizar Windows: análisis
 de espacio, limpieza de disco, programas de inicio,
@@ -225,7 +225,7 @@ de Administrador (UAC) automáticamente** al abrirlo.
 |-------|-------|
 | Compañía | Axiios_HTs |
 | Producto | Optimización |
-| Versión | 1.5.1 |
+| Versión | 1.5.2 |
 | Ícono | Imagen + texto "optimización" |
 
 **Para compartirlo:**
