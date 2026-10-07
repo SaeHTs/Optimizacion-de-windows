@@ -2,8 +2,11 @@
 
 **Proveedor:** Axiios_HTs · **Versión:** 1.5.1
 
-Herramienta interactiva en **Python** para optimizar Windows: limpieza de disco,
-programas de inicio, rendimiento y mantenimiento, todo desde un menú en terminal.
+Herramienta en **Python** para optimizar Windows: análisis
+de espacio, limpieza de disco, programas de inicio,
+rendimiento y mantenimiento inteligente.
+Incluye **menú en consola**, **GUI con tema oscuro**
+y **instalador** (Inno Setup).
 
 ## 💻 Compatibilidad
 
@@ -68,7 +71,8 @@ windows-optimizer/
 
 | Módulo | Operaciones |
 |--------|-------------|
-| Limpieza | `%TEMP%`, `Windows\Temp`, Prefetch, papelera, caché de Windows Update, DISM |
+| Análisis | Análisis de espacio (paralelo), vista previa dry-run |
+| Limpieza | `%TEMP%`, `Windows\Temp`, Prefetch, papelera, caché de Windows Update, optimización de entrega, DISM |
 | Inicio | Listar/deshabilitar/habilitar entradas del registro (reversible) |
 | Rendimiento | Planes de energía, efectos visuales, servicios opcionales |
 | Mantenimiento | SFC, DISM RestoreHealth, optimización de discos (TRIM/HDD), diagnóstico de RAM |
@@ -82,7 +86,8 @@ Libera espacio eliminando archivos innecesarios:
 - **Prefetch:** elimina archivos de precarga; Windows los regenera solo.
 - **Papelera de reciclaje:** vacía todas las unidades.
 - **Caché de Windows Update:** detiene los servicios, borra
-  `C:\Windows\SoftwareDistribution\Download` y los reinicia.
+  `C:\Windows\SoftwareDistribution\Download` (y la
+  **optimización de entrega**) y los reinicia.
 - **Componentes obsoletos (DISM):** elimina copias antiguas de componentes
   de Windows; puede liberar varios GB.
 
@@ -123,7 +128,8 @@ Mantiene Windows sano y estable:
 Opción **7** del menú principal (y en cada submenú): ejecuta
 todas las optimizaciones de la sección sin preguntas intermedias.
 
-- **Limpieza:** temporales + prefetch + papelera + caché + DISM
+- **Limpieza:** temporales + prefetch + papelera + caché
+  de Update (y optimización de entrega) + DISM
 - **Inicio:** deshabilita solo entradas seguras
   (auto-lanzador de Edge, programador de Java) — reversible
 - **Rendimiento:** plan alto rendimiento + visuales + servicios
@@ -211,9 +217,16 @@ winget install JRSoftware.InnoSetup   # si no lo tienes
 
 ## 📦 Distribución (para otros usuarios)
 
-El ejecutable standalone está en `dist/Optimizacion.exe` (7 MB aprox).
-No requiere Python instalado y **solicita permisos de Administrador
-automáticamente** al abrirlo.
+**Tres productos listos para distribuir:**
+
+| Producto | Tamaño | Para quién |
+|----------|--------|------------|
+| `installer\Optimizacion-Setup.exe` | ~24 MB | Usuarios normales (instalador) |
+| `dist\Optimizacion-GUI.exe` | ~11 MB | Portátil con ventana |
+| `dist\Optimizacion.exe` | ~11 MB | Portátil con menú en consola |
+
+Ninguno requiere Python y los exe **solicitan permisos
+de Administrador (UAC) automáticamente** al abrirlo.
 
 **Datos del programa (Propiedades → Detalles):**
 
@@ -246,7 +259,21 @@ Todas las acciones quedan registradas en `optimizador.log`.
 
 ## ➕ Ideas para ampliar
 
-- Gestión de tareas programadas en inicio (Task Scheduler)
-- Limpieza de navegadores (caché, cookies) con confirmación
-- Panel de control con interfaz gráfica (Tkinter/PyQt)
-- Exportar/importar configuración de optimizaciones aplicadas
+- Auto-updater (avisa cuando hay versión nueva)
+- Publicar en winget (`winget install Axiios_HTs.Optimizacion`)
+- Multi-idioma (español/inglés)
+- Limpieza de navegadores con confirmación
+- Exportar/importar configuración aplicada
+
+## 📜 Historial de versiones
+
+| Versión | Novedad |
+|---------|---------|
+| 1.5.1 | Instalador por usuario (soluciona error 740) |
+| 1.5 | GUI con tema oscuro + instalador (Inno Setup) |
+| 1.4.1 | Correcciones (Firefox cache2, edge case, entrega) |
+| 1.4 | Análisis de espacio + modo dry-run |
+| 1.3 | Mantenimiento inteligente (verifica primero) |
+| 1.2 | Modo automático + interfaz (splash, colores) |
+| 1.1 | Velocidad (scandir, salida en vivo, paralelismo) |
+| 1.0 | Base: 4 módulos + ejecutable branded |
