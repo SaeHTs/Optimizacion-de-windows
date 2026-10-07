@@ -46,6 +46,26 @@ windows-optimizer/
 | Rendimiento | Planes de energía, efectos visuales, servicios opcionales |
 | Mantenimiento | SFC, DISM RestoreHealth, optimización de discos (TRIM/HDD), diagnóstico de RAM |
 
+## 📦 Distribución (para otros usuarios)
+
+El ejecutable standalone está en `dist/OptimizadorWindows.exe` (7 MB aprox).
+No requiere Python instalado y **solicita permisos de Administrador
+automáticamente** al abrirlo.
+
+**Para compartirlo:**
+
+1. Sube el `.exe` a una **GitHub Release**, Google Drive, Dropbox, etc.
+2. En la primera ejecución, Windows mostrará un aviso de SmartScreen
+   (el exe no está firmado digitalmente): click en *"Más información"*
+   → *"Ejecutar de todos modos"*.
+
+**Para reconstruir el exe:**
+
+```powershell
+pip install pyinstaller
+pyinstaller --onefile --uac-admin --name OptimizadorWindows main.py
+```
+
 ## 📝 Logs
 
 Todas las acciones quedan registradas en `optimizador.log`.
