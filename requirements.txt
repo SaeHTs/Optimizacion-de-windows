@@ -1,0 +1,9 @@
+# Dependencias del Optimizador de Windows
+# Python 3.10+ requerido (se usan las anotaciones modernas de tipo).
+
+# Opcional pero recomendado: la opción "Información del sistema"
+# muestra CPU/memoria/disco detallados si está instalado.
+# Sin él, se usa el comando `systeminfo` como respaldo.
+psutil>=5.9 ; sys_platform == "win32"
+
+pyinstaller>=6.0 ; sys_platform == "win32"

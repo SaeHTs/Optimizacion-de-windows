@@ -1,0 +1,44 @@
+# Logs
+*.log
+optimizador.log
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# PyInstaller
+build/
+*.spec
+dist/
+
+# Inno Setup
+installer/
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Artefactos internos del proceso de commit
+TEMP*
+TEMP_*
+_msg.txt
+
+# Demos locales (solo en el PC del autor, no se suben al repo)
+DEMO_BARRA.bat
+demo_barra.py
+demo_emisor.py
+
+# Estado local generado en ejecución (nunca se publica)
+logs/
+config_gui.json
+informe_optimizacion*.txt
+.ai-memory.toml
+
+# Herramientas locales del agente (no forman parte del producto)
+.opencode/
+
+# Paquete portable suelto en la raíz (el release lo publica en assets)
+Optimizacion.zip

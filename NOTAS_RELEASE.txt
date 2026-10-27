@@ -1,0 +1,70 @@
+## Qué hay de nuevo en v1.9.0
+
+### Bilingüe español/inglés 🌐
+- El programa ahora funciona en **español e inglés**.
+- **Detección automática**: si Windows está en español arranca en
+  español; en cualquier otro idioma, arranca en inglés.
+- **Selector en la GUI** (botón 🌐 del encabezado): cambia de idioma al
+  instante, sin cerrar el programa.
+- **Opción 11) 🌐 Idioma / Language** en el menú de consola.
+- La preferencia se guarda en `config_gui.json` (`"idioma": "auto"`,
+  `"es"` o `"en"`).
+- Todo el texto de usuario está traducido: menús, botones, diálogos,
+  mensajes del registro y el informe exportado.
+- **El test de efectividad también está traducido** (`test_efectividad.py`),
+  con su propia tabla de traducciones (`locales/en.test.json`).
+- **El instalador también es bilingüe**: al instalarlo se puede elegir
+  español o inglés (textos propios en `instalador/mensajes_es.isl` y
+  `instalador/mensajes_en.isl`).
+- Motor propio (`i18n.py` + tablas en `locales/`), sin dependencias
+  externas. Si falta una traducción, se muestra el texto original.
+
+### Título de la app
+- El encabezado de la GUI muestra **"⚡ HTs OPTIMIZACIÓN"** (en inglés:
+  "⚡ HTs OPTIMIZATION").
+
+### Correcciones
+- **La instalación ya no falla al final**: el instalador lanzaba la aplicación
+  (que exige administrador) con `CreateProcess` y terminaba con *"CreateProcess
+  falló; código 740"* (*la operación solicitada requiere elevación*). Ahora la
+  lanza con `ShellExecute`, que sí muestra el aviso de UAC.
+- **Si la aplicación está abierta al instalar**, sus ficheros estaban en uso y
+  la instalación fallaba con *"Omitir este archivo"*. Ahora el instalador lo
+  detecta antes de empezar y avisa en el idioma del instalador
+  (*"La aplicación está abierta. Ciérrala y vuelve a ejecutar el instalador."*).
+- **La configuración ya no se ignora en silencio**: si el archivo
+  `config_gui.json` tiene BOM (lo añaden PowerShell y algunos editores), la
+  app lo leía como inválido y perdías tus preferencias (por ejemplo, el
+  idioma elegido). Ahora se lee con `utf-8-sig` y funciona igual.
+- Los mensajes de arranque y cierre del registro de la consola también
+  están traducidos.
+- El nombre del plan de energía sale traducido en el informe (antes ponía el
+  de Windows, en el idioma del sistema).
+- **El idioma ya no se queda a medias al cambiarlo**: las descripciones de
+  servicios, ajustes y rutas se calculaban al arrancar y quedaban congeladas en
+  ese idioma (en inglés se veía *"1) High performance"* junto a *"Activate the
+  'Alto rendimiento' plan?"*). Ahora se recalculan al cambiar de idioma.
+- **La GUI no pierde el historial** del log al cambiar de idioma.
+- Los **nombres de los perfiles** se muestran traducidos: el menú dice
+  *"Balanced"* y el diálogo también.
+- Si el idioma guardado en la configuración no es válido, ahora se usa el del
+  sistema en vez de quedarse en español sin avisar.
+
+### Heredado de v1.8.4
+- Interfaz cyberpunk/dark (el logo de inicio no se modificó).
+- Validación de Python 64 bits; timeout de comandos a 60 s por defecto.
+- Plan de energía inteligente (Equilibrado en laptops, Alto
+  rendimiento en desktop) y deshabilitación de servicios en paralelo.
+
+### Compatibilidad
+- Para ejecutar desde fuente se requiere **Python 3.10+ de 64 bits**
+  (los .exe ya son x64).
+
+## Descargas
+
+- **Optimizacion-GUI.exe** — Interfaz gráfica (con icono custom)
+- **Optimizacion.exe** — Consola (con icono custom)
+- **Optimizacion-Setup.exe** — Instalador junto a los dos anteriores
+
+---
+*Todo el código está en el repositorio.*

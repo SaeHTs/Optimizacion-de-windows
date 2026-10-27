@@ -1,0 +1,10 @@
+{
+  "⚠️  No se pudo guardar el registro de deshacer: {e}": "⚠️  Could not save the undo log: {e}",
+  "    Los cambios se aplican, pero 'Deshacer' no los verá.": "    Changes are applied, but 'Undo' will not see them.",
+  "  ↩️  Servicio {nombre}: vuelve a {inicio_previo}": "  ↩️  Service {nombre}: reverted to {inicio_previo}",
+  "  ⚠️  No se pudo restaurar el servicio {nombre}": "  ⚠️  Could not restore the service {nombre}",
+  "  ↩️  Tarea {nombre}: habilitada de nuevo": "  ↩️  Task {nombre}: enabled again",
+  "  ⚠️  No se pudo restaurar la tarea {nombre}": "  ⚠️  Could not restore the task {nombre}",
+  "  ↩️  Registro {nombre}: restaurado": "  ↩️  Registry {nombre}: restored",
+  "  ⚠️  No se pudo restaurar {nombre}": "  ⚠️  Could not restore {nombre}"
+}
