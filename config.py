@@ -111,11 +111,45 @@ TAREAS_TELEMETRIA = [
     (r"\Microsoft\Windows\Application Experience", "Microsoft Compatibility Appraiser"),
     (r"\Microsoft\Windows\Application Experience", "ProgramDataUpdater"),
     (r"\Microsoft\Windows\Autochk", "Proxy"),
+    (r"\Microsoft\Windows\Feedback\Siuf", "DmClient"),
+    (r"\Microsoft\Windows\Feedback\Siuf", "DmClientOnScenarioDownload"),
+    (r"\Microsoft\Windows\Windows Error Reporting", "QueueReporting"),
+    (r"\Microsoft\Windows\DiskDiagnostic",
+     "Microsoft-Windows-DiskDiagnosticDataCollector"),
+    (r"\Microsoft\Windows\PI", "Sqm-Tasks"),
 ]
 
 # Ajustes de privacidad y gaming (registro). (descripción, raiz, subclave, valor, dato)
 RAIZ_HKCU = "HKCU"
 RAIZ_HKLM = "HKLM"
+
+
+# Políticas de telemetría: no rompen ninguna función (solo recortan
+# diagnósticos, sugerencias y seguimiento de uso). Todas son DWORD.
+def _textos_politicas_telemetria() -> list:
+    return [
+        (tr("Diagnóstico: solo datos necesarios"), RAIZ_HKLM,
+         r"SOFTWARE\Policies\Microsoft\Windows\DataCollection",
+         "AllowTelemetry", 0),
+        (tr("Seguimiento de apps abiertas"), RAIZ_HKCU,
+         r"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced",
+         "Start_TrackProgs", 0),
+        (tr("Sugerencias en el menú Inicio"), RAIZ_HKCU,
+         r"SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager",
+         "SystemPaneSuggestionsEnabled", 0),
+        (tr("Apps sugeridas instaladas solas"), RAIZ_HKCU,
+         r"SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager",
+         "SilentInstalledAppsEnabled", 0),
+        (tr("Consejos y sugerencias"), RAIZ_HKCU,
+         r"SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager",
+         "SoftLandingEnabled", 0),
+        (tr("Experiencias de consumo de Microsoft"), RAIZ_HKLM,
+         r"SOFTWARE\Policies\Microsoft\Windows\CloudContent",
+         "DisableWindowsConsumerFeatures", 1),
+    ]
+
+
+POLITICAS_TELEMETRIA = _textos_politicas_telemetria()
 def _textos_ajustes_privacidad() -> list:
     return [
         (tr("ID de publicidad"), RAIZ_HKCU, r"SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo", "Enabled", 0),
@@ -168,6 +202,7 @@ def _refrescar_textos() -> None:
     SERVICIOS_CONDICIONALES.update(_textos_servicios_condicionales())
     AJUSTES_PRIVACIDAD[:] = _textos_ajustes_privacidad()
     AJUSTES_GAMING[:] = _textos_ajustes_gaming()
+    POLITICAS_TELEMETRIA[:] = _textos_politicas_telemetria()
     PLANES_ENERGIA.clear()
     PLANES_ENERGIA.update(_textos_planes_energia())
 

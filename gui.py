@@ -762,17 +762,20 @@ class CentroDeMando:
         self._ejecutar(deshacer_cambios, True)  # automatico=True: ya confirmado aquí
 
     def _accion_telemetria(self) -> None:
-        """Desactiva las tareas programadas de telemetría (reversible)."""
+        """Tareas de telemetría y políticas de privacidad (reversible)."""
         if not messagebox.askyesno(
-            tr("Tareas de telemetría"),
+            tr("Telemetría"),
             tr("Se desactivarán las tareas programadas de telemetría\n"
-               "(CEIP / Application Experience / Autochk Proxy).\n\n"
+               "(CEIP / Feedback / WER / SQM / diagnóstico de disco)\n"
+               "y se aplicarán las políticas de privacidad: diagnóstico\n"
+               "mínimo, sin seguimiento de apps ni apps sugeridas.\n\n"
+               "No rompe notificaciones, ubicación, portapapeles ni impresión.\n"
                "Es reversible con 'Deshacer cambios'.\n\n"
                "¿Continuar?"),
         ):
             return
-        from modules.performance import deshabilitar_tareas_telemetria
-        self._ejecutar(deshabilitar_tareas_telemetria, True)  # automatico=True
+        from modules.performance import aplicar_telemetria
+        self._ejecutar(aplicar_telemetria, True)  # automatico=True
 
     def _accion_restore(self) -> None:
         if not verificar_permisos():

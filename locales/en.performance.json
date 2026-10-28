@@ -81,5 +81,13 @@
   "  9) 🎯 Perfiles (Equilibrado / Gaming / Privacidad)": "  9) 🎯 Profiles (Balanced / Gaming / Privacy)",
   "  10) ⏪ Deshacer cambios de optimización": "  10) ⏪ Undo optimization changes",
   "Seleccione una opción: ": "Select an option: ",
-  "Módulo de rendimiento ejecutado: opción %s": "Performance module executed: option %s"
+  "Módulo de rendimiento ejecutado: opción %s": "Performance module executed: option %s",
+  "\n📡 Telemetría: tareas programadas y políticas": "\n📡 Telemetry: scheduled tasks and policies",
+  "   Tareas a desactivar: {n}": "   Tasks to disable: {n}",
+  "   Políticas a aplicar: {n}": "   Policies to apply: {n}",
+  "   Todo reversible con 'Deshacer cambios'.": "   All reversible with 'Undo changes'.",
+  "    ⚠️  Tareas de telemetría: {e}": "    ⚠️  Telemetry tasks: {e}",
+  "\n✅ {n} política(s) de privacidad aplicadas.": "\n✅ {n} privacy policy(ies) applied.",
+  "  8) 📡 Desactivar telemetría (tareas y políticas)": "  8) 📡 Disable telemetry (tasks and policies)",
+  "    ⏭️  {nombre}: ya estaba desactivada": "    ⏭️  {nombre}: already disabled"
 }

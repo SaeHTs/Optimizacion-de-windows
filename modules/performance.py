@@ -7,6 +7,7 @@ from config import (
     AJUSTES_GAMING,
     AJUSTES_PRIVACIDAD,
     PLANES_ENERGIA,
+    POLITICAS_TELEMETRIA,
     SERVICIOS_AVANZADOS,
     SERVICIOS_CONDICIONALES,
     SERVICIOS_OPCIONALES,
@@ -270,6 +271,15 @@ def deshabilitar_tareas_telemetria(automatico: bool = False) -> None:
         return
     hechas = 0
     for ruta, nombre in TAREAS_TELEMETRIA:
+        # Si ya estaba desactivada, no se toca: registrarla haría que
+        # 'Deshacer' la encendiera sin que la app la hubiera apagado.
+        codigo, estado = ejecutar_powershell(
+            f"(Get-ScheduledTask -TaskName '{nombre}' -TaskPath '{ruta}\\' "
+            "-ErrorAction Stop).State"
+        )
+        if codigo == 0 and estado.strip().lower() == "disabled":
+            print(tr("    ⏭️  {nombre}: ya estaba desactivada").format(nombre=nombre))
+            continue
         codigo, _ = ejecutar_powershell(
             f"Disable-ScheduledTask -TaskName '{nombre}' -TaskPath '{ruta}\\' "
             "-ErrorAction Stop"
@@ -282,6 +292,27 @@ def deshabilitar_tareas_telemetria(automatico: bool = False) -> None:
             print(tr("    ⏭️  {nombre}: no encontrada o no se pudo desactivar")
                   .format(nombre=nombre))
     print(tr("✅ {hechas} tarea(s) de telemetría desactivadas.").format(hechas=hechas))
+
+
+def aplicar_telemetria(automatico: bool = False) -> None:
+    """Telemetría completa: tareas programadas + políticas de privacidad.
+
+    Son dos mitades independientes: si una falla, la otra se intenta igual.
+    Todo queda registrado para 'Deshacer cambios'.
+    """
+    print(tr("\n📡 Telemetría: tareas programadas y políticas"))
+    print(tr("   Tareas a desactivar: {n}").format(n=len(TAREAS_TELEMETRIA)))
+    print(tr("   Políticas a aplicar: {n}").format(n=len(POLITICAS_TELEMETRIA)))
+    print(tr("   Todo reversible con 'Deshacer cambios'."))
+    if not automatico and not confirmar(tr("¿Continuar?")):
+        print(tr("   Operación cancelada."))
+        return
+    try:
+        deshabilitar_tareas_telemetria(automatico=True)
+    except Exception as e:  # una mitad no debe bloquear a la otra
+        print(tr("    ⚠️  Tareas de telemetría: {e}").format(e=e))
+    aplicados = _aplicar_ajustes_registro(POLITICAS_TELEMETRIA)
+    print(tr("\n✅ {n} política(s) de privacidad aplicadas.").format(n=aplicados))
 
 
 def _aplicar_ajustes_registro(ajustes) -> int:
@@ -453,7 +484,7 @@ def menu_rendimiento(logger) -> None:
 
         separador(tr("Servicios y procesos (reversible)"))
         print(tr("  7) 🧩 Elegir servicios a deshabilitar (detecta este PC)"))
-        print(tr("  8) 📡 Desactivar tareas de telemetría"))
+        print(tr("  8) 📡 Desactivar telemetría (tareas y políticas)"))
         print(tr("  9) 🎯 Perfiles (Equilibrado / Gaming / Privacidad)"))
         print(tr("  10) ⏪ Deshacer cambios de optimización"))
         print(tr("  0) ⬅️  Volver"))
@@ -478,7 +509,7 @@ def menu_rendimiento(logger) -> None:
         elif opcion == "7":
             elegir_servicios_avanzado()
         elif opcion == "8":
-            deshabilitar_tareas_telemetria()
+            aplicar_telemetria()
         elif opcion == "9":
             menu_perfiles()
         elif opcion == "10":

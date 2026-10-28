@@ -79,5 +79,6 @@
   "❌ Esta herramienta requiere Python de 64 bits.": "❌ This tool requires 64-bit Python.",
   "   Instala Python de 64 bits (amd64) y vuelve a intentarlo.": "   Install 64-bit Python (amd64) and try again.",
   "Administrador requerido": "Administrator required",
-  "El optimizador necesita permisos de Administrador.\n\n¿Reiniciar como Administrador?": "The optimizer needs Administrator permissions.\n\nRestart as Administrator?"
+  "El optimizador necesita permisos de Administrador.\n\n¿Reiniciar como Administrador?": "The optimizer needs Administrator permissions.\n\nRestart as Administrator?",
+  "Se desactivarán las tareas programadas de telemetría\n(CEIP / Feedback / WER / SQM / diagnóstico de disco)\ny se aplicarán las políticas de privacidad: diagnóstico\nmínimo, sin seguimiento de apps ni apps sugeridas.\n\nNo rompe notificaciones, ubicación, portapapeles ni impresión.\nEs reversible con 'Deshacer cambios'.\n\n¿Continuar?": "Scheduled telemetry tasks will be disabled\n(CEIP / Feedback / WER / SQM / disk diagnostics)\nand privacy policies will be applied: minimal\ndiagnostics, no app tracking or suggested apps.\n\nIt does not break notifications, location, clipboard or printing.\nIt is reversible with 'Undo changes'.\n\nContinue?"
 }

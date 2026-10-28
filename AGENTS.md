@@ -23,14 +23,14 @@ Herramienta en **Python 3.10+** para optimizar Windows 10/11 (x64). Incluye limp
 
 ## 🏗️ Estructura del Proyecto
 - `main.py` — Menú de consola. Verifica admin, muestra opciones (1-8, 0).
-- `gui.py` — **Centro de mando** (Tkinter): orquesta los widgets de `modules/hud/`, los hilos y la cola; no contiene lógica de sistema. Ventana de 1000×660 (mínimo 900×620) con barra superior (título + `ES | EN` + marca "Auto"), barra lateral de navegación, medidor circular de salud 0-100, cuatro tarjetas clicables (disco, inicio, RAM/CPU, mantenimiento), botón principal **"Optimizar ahora"** y **"Deshacer último cambio"**, registro en vivo, barra de progreso y barra de estado. Acciones de la barra lateral: Optimizar todo (modo automático con confirmación DESPUÉS del dry-run), Limpieza, Inicio, Rendimiento, Mantenimiento, **Perfiles (diálogo E/G/P: `_accion_perfiles`)**, Vista previa, Análisis, Exportar informe, Punto de restauración, **Tareas de telemetría (`_accion_telemetria`)**, Información, Abrir registro y **Deshacer (`_accion_deshacer` → rollback)**. Los datos lentos (disco, inicio) se miden en un hilo; RAM/CPU cada 1,5 s con `Sondeo`. Log coloreado automático (✅ verde / ⚠️ amarillo / ❌ rojo).
+- `gui.py` — **Centro de mando** (Tkinter): orquesta los widgets de `modules/hud/`, los hilos y la cola; no contiene lógica de sistema. Ventana de 1000×660 (mínimo 900×620) con barra superior (título + `ES | EN` + marca "Auto"), barra lateral de navegación, medidor circular de salud 0-100, cuatro tarjetas clicables (disco, inicio, RAM/CPU, mantenimiento), botón principal **"Optimizar ahora"** y **"Deshacer último cambio"**, registro en vivo, barra de progreso y barra de estado. Acciones de la barra lateral: Optimizar todo (modo automático con confirmación DESPUÉS del dry-run), Limpieza, Inicio, Rendimiento, Mantenimiento, **Perfiles (diálogo E/G/P: `_accion_perfiles`)**, Vista previa, Análisis, Exportar informe, Punto de restauración, **Telemetría (`_accion_telemetria`: tareas + políticas)**, Información, Abrir registro y **Deshacer (`_accion_deshacer` → rollback)**. Los datos lentos (disco, inicio) se miden en un hilo; RAM/CPU cada 1,5 s con `Sondeo`. Log coloreado automático (✅ verde / ⚠️ amarillo / ❌ rojo).
 - `modules/hud/` — Componentes de la interfaz, uno por archivo: `tema.py` (paleta y fuentes, **único sitio con colores**), `datos.py` (datos reales + fórmula de salud + `Sondeo`), `medidor.py` (`MedidorSalud`), `tarjeta.py` (`Tarjeta`), `boton.py` (`BotonHUD`), `lateral.py` (`BarraLateral`), `superior.py` (`BarraSuperior`).
 - `config_gui.py` — Configuración persistente de la GUI (JSON junto al exe). Con `"recordar_pos": true` restaura tamaño/posición de la ventana (la geometría se guarda al cerrar).
 - `modules/core.py` — **Lógica central compartida** (verificar_permisos, reiniciar_como_admin, ejecutar_vista_previa, ejecutar_auto_completo). `main.py` y `gui.py` la consumen sin duplicar código.
 - `modules/analisis.py` — Análisis de espacio y vista previa (dry-run) con indicadores de progreso.
 - `modules/disk_cleanup.py` — Limpieza de temporales, prefetch, papelera, caché de Windows Update/entrega, DISM, caché de navegadores (Chrome/Edge/Firefox), miniaturas y logs/volcados. Eliminación iterativa (sin recursión).
 - `modules/startup.py` — Gestión de entradas de inicio del registro.
-- `modules/performance.py` — Planes de energía, efectos visuales, servicios (opcionales + avanzados con detección), tareas de telemetría, perfiles (equilibrado/gaming/privacidad).
+- `modules/performance.py` — Planes de energía, efectos visuales, servicios (opcionales + avanzados con detección), telemetría (10 tareas + 6 políticas), perfiles (equilibrado/gaming/privacidad).
 - `modules/rollback.py` — Registro JSON (`logs/rollback.json`) de cambios reversibles (servicios/tareas/registro) y `deshacer()`. Registrar SIEMPRE el estado previo antes de tocar.
 - `modules/maintenance.py` — SFC, DISM, optimización de discos, diagnóstico RAM.
 - `utils.py` — Ejecución de comandos, logger **`logs/optimizador-AAAA-MM-DD.log`** (v1.7.0: ya no el único archivo gigante), helpers, **`ejecutar_con_barra()`** (barra por %), **`etapa()`** (barra por pasos), **`tipo_unidad()`** (SSD/HDD).
@@ -57,6 +57,10 @@ Herramienta en **Python 3.10+** para optimizar Windows 10/11 (x64). Incluye limp
 - `test_hud.py` — Pruebas del centro de mando: paleta y umbrales de color,
   fórmula de salud, antigüedad del último mantenimiento y construcción de los
   widgets con una raíz Tk real y oculta. `python -m pytest test_hud.py -q`.
+- `test_telemetria.py` - Pruebas de la telemetría: rutas de las 10 tareas
+  programadas, las 6 políticas DWORD (sin duplicados), cambio de idioma y
+  flujo `aplicar_telemetria` sin tocar el sistema.
+  `python -m pytest test_telemetria.py -q`.
 - `config.py` — Rutas, servicios seguros, planes de energía.
 
 ## ⚠️ Notas Críticas
@@ -79,7 +83,7 @@ python gui.py
 python test_efectividad.py
 
 # Pruebas del centro de mando y del bilingüe
-python -m pytest test_hud.py test_i18n.py -q
+python -m pytest test_hud.py test_i18n.py test_telemetria.py -q
 
 # Verificar sintaxis (python NO expande comodines en PowerShell: hay que
 # construir la lista de ficheros, si no falla con "Invalid argument")
@@ -118,7 +122,7 @@ $iscc = @("C:\Program Files (x86)\Inno Setup 6\ISCC.exe", "C:\Program Files\Inno
 - `utils.py` — Logger y ejecución de comandos.
 
 ---
-*Guía actualizada a v1.9.0 (bilingüe ES/EN: motor i18n propio sin dependencias, detección automática del idioma de Windows, botón 🌐 en la GUI que cambia el idioma al instante, opción 11 en consola, preferencia `idioma` en `config_gui.json`; hereda v1.8.4: interfaz cyberpunk/dark en la GUI, logo de inicio intacto; validación de Python 64 bits; timeout default de comandos a 60 s; plan de energía inteligente laptop/desktop; deshabilitación de servicios en paralelo; hereda v1.8.3: robustez — logger con fallback a %TEMP% si la carpeta es de solo lectura, rollback avisa si no puede guardar, GUI valida que la geometría recordada sea visible, test redirige UTF-8 sin crash; hereda v1.8.2: extracción de versión reparada en los .bat de release vía línea `FileVersion`, `version_info.txt` en UTF-8 limpio sin BOM, rollback también para modo automático y menú de servicios, deshacer con errores reales vía `-ErrorAction Stop`, test de efectividad con detección de plan por GUID): logs por fecha (`logs/`), detección SSD/HDD en optimización de discos (`tipo_unidad()`), atajos de teclado en GUI (Ctrl+L/I/R/M/A/V/O/P/D/T y F5), config persistente del GUI (`config_gui.json`, `recordar_pos` funciona), interfaz GUI reorganizada por secciones con perfiles/telemetría/deshacer. Demos locales (`demo_barra.py`, `demo_emisor.py`, `DEMO_BARRA.bat`) NO suben al repo (ver `.gitignore`).*
+*Guía actualizada a v2.0.0 (telemetría ampliada: 10 tareas y 6 políticas) (bilingüe ES/EN: motor i18n propio sin dependencias, detección automática del idioma de Windows, botón 🌐 en la GUI que cambia el idioma al instante, opción 11 en consola, preferencia `idioma` en `config_gui.json`; hereda v1.8.4: interfaz cyberpunk/dark en la GUI, logo de inicio intacto; validación de Python 64 bits; timeout default de comandos a 60 s; plan de energía inteligente laptop/desktop; deshabilitación de servicios en paralelo; hereda v1.8.3: robustez — logger con fallback a %TEMP% si la carpeta es de solo lectura, rollback avisa si no puede guardar, GUI valida que la geometría recordada sea visible, test redirige UTF-8 sin crash; hereda v1.8.2: extracción de versión reparada en los .bat de release vía línea `FileVersion`, `version_info.txt` en UTF-8 limpio sin BOM, rollback también para modo automático y menú de servicios, deshacer con errores reales vía `-ErrorAction Stop`, test de efectividad con detección de plan por GUID): logs por fecha (`logs/`), detección SSD/HDD en optimización de discos (`tipo_unidad()`), atajos de teclado en GUI (Ctrl+L/I/R/M/A/V/O/P/D/T y F5), config persistente del GUI (`config_gui.json`, `recordar_pos` funciona), interfaz GUI reorganizada por secciones con perfiles/telemetría/deshacer. Demos locales (`demo_barra.py`, `demo_emisor.py`, `DEMO_BARRA.bat`) NO suben al repo (ver `.gitignore`).*
 
 ---
 

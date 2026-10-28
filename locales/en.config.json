@@ -31,5 +31,11 @@
   "Game DVR (sistema)": "Game DVR (system)",
   "Alto rendimiento": "High performance",
   "Equilibrado (recomendado)": "Balanced (recommended)",
-  "Ahorro de energía": "Power saver"
+  "Ahorro de energía": "Power saver",
+  "Diagnóstico: solo datos necesarios": "Diagnostics: required data only",
+  "Seguimiento de apps abiertas": "App launch tracking",
+  "Sugerencias en el menú Inicio": "Start menu suggestions",
+  "Apps sugeridas instaladas solas": "Suggested apps installed automatically",
+  "Consejos y sugerencias": "Tips and suggestions",
+  "Experiencias de consumo de Microsoft": "Microsoft consumer experiences"
 }

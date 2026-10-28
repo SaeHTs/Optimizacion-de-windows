@@ -13,7 +13,7 @@ Descarga desde [Releases](https://github.com/SaeHTs/Optimizacion-de-windows/rele
 - **Limpieza de disco** — Temporales, caché, papelera
 - **Centro de mando** — Panel HUD con medidor de salud del PC (0-100) y tarjetas de estado en vivo
 - **Gestión de inicio** — Controla programas al arrancar
-- **Rendimiento** — Planes de energía, efectos visuales, servicios
+- **Rendimiento** — Planes de energía, efectos visuales, servicios y telemetría
 - **Mantenimiento** — SFC, DISM, optimización de discos
 - **Modo automático** — Optimización completa con vista previa
 - **Deshacer cambios** — Rollback de servicios, tareas y registro
