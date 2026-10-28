@@ -23,7 +23,8 @@ Herramienta en **Python 3.10+** para optimizar Windows 10/11 (x64). Incluye limp
 
 ## 🏗️ Estructura del Proyecto
 - `main.py` — Menú de consola. Verifica admin, muestra opciones (1-8, 0).
-- `gui.py` — Interfaz Tkinter con tema oscuro. Usa hilos y una cola para no congelarse. Botones **agrupados por secciones** con color por categoría (igual que la consola). Acciones: Limpieza, Inicio, Rendimiento, Mantenimiento, Análisis, Vista previa, Modo automático (con confirmación DESPUÉS del dry-run), **Perfiles (diálogo E/G/P: `_accion_perfiles`)**, **Tareas de telemetría (`_accion_telemetria`)**, **Deshacer cambios (`_accion_deshacer` → rollback)**, Punto de restauración, Exportar informe, Info del sistema, Abrir registro. Badge de admin en el encabezado. Log coloreado automático (✅ verde / ⚠️ amarillo / ❌ rojo).
+- `gui.py` — **Centro de mando** (Tkinter): orquesta los widgets de `modules/hud/`, los hilos y la cola; no contiene lógica de sistema. Ventana de 1000×660 (mínimo 900×620) con barra superior (título + `ES | EN` + marca "Auto"), barra lateral de navegación, medidor circular de salud 0-100, cuatro tarjetas clicables (disco, inicio, RAM/CPU, mantenimiento), botón principal **"Optimizar ahora"** y **"Deshacer último cambio"**, registro en vivo, barra de progreso y barra de estado. Acciones de la barra lateral: Optimizar todo (modo automático con confirmación DESPUÉS del dry-run), Limpieza, Inicio, Rendimiento, Mantenimiento, **Perfiles (diálogo E/G/P: `_accion_perfiles`)**, Vista previa, Análisis, Exportar informe, Punto de restauración, **Tareas de telemetría (`_accion_telemetria`)**, Información, Abrir registro y **Deshacer (`_accion_deshacer` → rollback)**. Los datos lentos (disco, inicio) se miden en un hilo; RAM/CPU cada 1,5 s con `Sondeo`. Log coloreado automático (✅ verde / ⚠️ amarillo / ❌ rojo).
+- `modules/hud/` — Componentes de la interfaz, uno por archivo: `tema.py` (paleta y fuentes, **único sitio con colores**), `datos.py` (datos reales + fórmula de salud + `Sondeo`), `medidor.py` (`MedidorSalud`), `tarjeta.py` (`Tarjeta`), `boton.py` (`BotonHUD`), `lateral.py` (`BarraLateral`), `superior.py` (`BarraSuperior`).
 - `config_gui.py` — Configuración persistente de la GUI (JSON junto al exe). Con `"recordar_pos": true` restaura tamaño/posición de la ventana (la geometría se guarda al cerrar).
 - `modules/core.py` — **Lógica central compartida** (verificar_permisos, reiniciar_como_admin, ejecutar_vista_previa, ejecutar_auto_completo). `main.py` y `gui.py` la consumen sin duplicar código.
 - `modules/analisis.py` — Análisis de espacio y vista previa (dry-run) con indicadores de progreso.
@@ -50,7 +51,12 @@ Herramienta en **Python 3.10+** para optimizar Windows 10/11 (x64). Incluye limp
   `compiler:Languages\Spanish.isl` y `compiler:Default.isl`.
 - `test_i18n.py` — Pruebas del soporte bilingüe: cobertura de traducciones,
   claves duplicadas, tablas que siguen al idioma, nombres de perfil.
+  Recorre `modules/` **de forma recursiva** (subcarpetas incluidas), así que
+  los textos de `modules/hud/` también quedan vigilados.
   Se ejecuta con `python test_i18n.py` (no necesita pytest).
+- `test_hud.py` — Pruebas del centro de mando: paleta y umbrales de color,
+  fórmula de salud, antigüedad del último mantenimiento y construcción de los
+  widgets con una raíz Tk real y oculta. `python -m pytest test_hud.py -q`.
 - `config.py` — Rutas, servicios seguros, planes de energía.
 
 ## ⚠️ Notas Críticas
@@ -72,8 +78,13 @@ python gui.py
 # Test de efectividad (solo lectura, puntúa el PC 0-100)
 python test_efectividad.py
 
-# Verificar sintaxis
-python -m py_compile main.py gui.py modules/*.py
+# Pruebas del centro de mando y del bilingüe
+python -m pytest test_hud.py test_i18n.py -q
+
+# Verificar sintaxis (python NO expande comodines en PowerShell: hay que
+# construir la lista de ficheros, si no falla con "Invalid argument")
+$f = @("main.py") + @(Get-ChildItem modules\*.py, modules\hud\*.py | ForEach-Object { $_.FullName })
+python -m py_compile @f
 
 # Construir ejecutables (requiere pyinstaller e inno setup)
 pyinstaller --onefile --uac-admin --icon icono.ico --version-file version_info.txt --add-data "splash.png;." --add-data "locales;locales" --name Optimizacion main.py
@@ -89,6 +100,14 @@ $iscc = @("C:\Program Files (x86)\Inno Setup 6\ISCC.exe", "C:\Program Files\Inno
 2. El modo automático modifica registro/servicios → usar punto de restauración.
 3. `vista_previa` puede tardar (calcula tamaños + verifica SFC/DISM); muestra indicadores "⏳".
 4. No romper la estructura de importaciones diferidas en `main.py` (evita costos de arranque).
+5. **Una sola raíz de Tk por proceso de prueba**: crear y destruir varias
+   `tk.Tk()` seguidas deja Tcl inservible ("Can't find a usable init.tcl").
+   `test_hud.py` comparte una raíz oculta fuera de pantalla (`+4000+4000`).
+6. `scrolledtext.ScrolledText` trae una **Scrollbar clásica** (`tk.Scrollbar`),
+   no ttk: los estilos `ttk.Style` no le llegan, hay que configurar
+   `log.vbar` directamente.
+7. La salud del HUD no penaliza los datos no medidos (`None`): sin registros
+   de mantenimiento la tarjeta dice "Sin registros" y ese tramo no resta.
 
 ## 📚 Fuentes de Verdad
 - `README.md` — Uso y compilación.

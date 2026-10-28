@@ -11,6 +11,7 @@ Descarga desde [Releases](https://github.com/SaeHTs/Optimizacion-de-windows/rele
 ## Características
 
 - **Limpieza de disco** — Temporales, caché, papelera
+- **Centro de mando** — Panel HUD con medidor de salud del PC (0-100) y tarjetas de estado en vivo
 - **Gestión de inicio** — Controla programas al arrancar
 - **Rendimiento** — Planes de energía, efectos visuales, servicios
 - **Mantenimiento** — SFC, DISM, optimización de discos
@@ -23,6 +24,16 @@ Descarga desde [Releases](https://github.com/SaeHTs/Optimizacion-de-windows/rele
 ## Uso
 
 Requiere **ejecutar como administrador** para aplicar optimizaciones.
+
+La pantalla principal es un **centro de mando** con:
+- Medidor circular de **salud del PC** (0-100). Fórmula documentada en
+  `modules/hud/datos.py`: disco 30 + inicio 20 + RAM 25 + mantenimiento 25
+  puntos de penalización; un dato que no se puede medir no penaliza.
+- Cuatro tarjetas clicables (disco, inicio, RAM/CPU, mantenimiento) que
+  llevan a su sección de la barra lateral.
+- **Optimizar ahora**: crea punto de restauración y aplica el perfil activo
+  (si el punto falla, no se cambia nada).
+- **Deshacer último cambio**: usa el registro de `logs/rollback.json`.
 
 ## Capturas
 
