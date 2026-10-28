@@ -35,12 +35,6 @@ La pantalla principal es un **centro de mando** con:
   (si el punto falla, no se cambia nada).
 - **Deshacer último cambio**: usa el registro de `logs/rollback.json`.
 
-## Capturas
-
-<p align="center">
-  <img src="docs/promo.gif" alt="Optimizador Windows" width="640">
-</p>
-
 ## Licencia
 
 MIT - ver [LICENSE.txt](LICENSE.txt).
