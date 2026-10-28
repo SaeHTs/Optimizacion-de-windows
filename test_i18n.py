@@ -53,9 +53,15 @@ def test_todos_los_textos_traducidos_existen_en_las_tablas():
         claves.update(tabla)
 
     ficheros = ["main.py", "gui.py", "i18n.py", "ui.py", "utils.py", "config.py",
-                "test_efectividad.py"] + sorted(
-        os.path.join("modules", f) for f in os.listdir(os.path.join(RAIZ, "modules"))
-        if f.endswith(".py"))
+                "test_efectividad.py"]
+    # Recorre modules/ ENTERO, subcarpetas incluidas: al partir la interfaz
+    # en componentes (modules/hud/) una lista fija dejaba sus textos sin
+    # vigilar y una cadena sin traducir pasaba desapercibida.
+    for base, _dirs, nombres in os.walk(os.path.join(RAIZ, "modules")):
+        for fichero in sorted(nombres):
+            if fichero.endswith(".py"):
+                ficheros.append(
+                    os.path.relpath(os.path.join(base, fichero), RAIZ))
 
     faltan = []
     for nombre in ficheros:
