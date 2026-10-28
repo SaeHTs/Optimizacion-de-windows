@@ -1,45 +1,42 @@
-## Qué hay de nuevo en v2.0.0
+## Qué hay de nuevo en v2.1.0
 
-### Centro de mando (nueva pantalla principal)
-- **Medidor circular de salud del PC** de 0 a 100, con el anillo de color según el
-  estado: magenta por debajo de 40, amarillo de 40 a 70 y cian por encima de 70.
-  La fórmula está documentada y es fácil de ajustar: disco 30 + inicio 20 +
-  RAM 25 + mantenimiento 25 puntos de penalización; un dato que no se puede
-  medir no penaliza.
-- **Cuatro tarjetas de estado en vivo**, cada una clicable y enlazada a su
-  sección:
-  - **Disco** — GB recuperables (medido de verdad, no estimado).
-  - **Inicio** — programas que arrancan con Windows.
-  - **RAM / CPU** — porcentaje de uso real, refrescado cada 1,5 s sin congelar
-    la ventana.
-  - **Mantenimiento** — días desde el último análisis.
-- **Barra lateral** con todas las funciones de siempre: optimización completa
-  (con vista previa), limpieza, inicio, rendimiento, mantenimiento, perfiles,
-  vista previa, análisis, exportar informe, punto de restauración, telemetría,
-  información, registro y deshacer.
-- **Barra superior** con el título, el selector **ES | EN** y la marca "Auto"
-  cuando el idioma se detectó del sistema.
-- **Botones principales**: **Optimizar ahora** (crea un punto de restauración
-  antes de aplicar el perfil activo; si el punto falla, no cambia nada) y
-  **Deshacer último cambio** (contorno magenta).
+### Telemetría más completa
+- **5 tareas programadas nuevas** que se desactivan junto a las que ya había:
+  - `Feedback\Siuf\DmClient` y `DmClientOnScenarioDownload` — encuestas y
+    escenarios de feedback de Windows.
+  - `Windows Error Reporting\QueueReporting` — envío de informes de error.
+  - `DiskDiagnostic\Microsoft-Windows-DiskDiagnosticDataCollector` —
+    telemetría de diagnóstico de disco.
+  - `PI\Sqm-Tasks` — SQM (en Windows 11 24H2 ya no existe: se omite sola).
+- **6 políticas de privacidad** (DWORD, todas reversibles):
+  - `AllowTelemetry = 0` — diagnóstico mínimo.
+  - `Start_TrackProgs = 0` — sin seguimiento de apps abiertas.
+  - `SystemPaneSuggestionsEnabled = 0` — sin sugerencias en el menú Inicio.
+  - `SilentInstalledAppsEnabled = 0` — sin apps sugeridas instaladas solas.
+  - `SoftLandingEnabled = 0` — sin consejos automáticos.
+  - `DisableWindowsConsumerFeatures = 1` — sin experiencias de consumo.
+- Se aplican desde el botón **Telemetría** de la GUI y desde la opción **8**
+  de consola, con una sola confirmación.
 
-### Interfaz
-- Paleta HUD centralizada en un solo fichero de tema, tipografía monoespaciada
-  y registro en vivo con colores por tipo de mensaje.
-- Ventana de 1000×660 con mínimo de 900×620; todo sigue legible al
-  redimensionar.
+### Nada de esto rompe funciones
+No se toca telemetría que sostenga algo que uses: notificaciones, ubicación,
+portapapeles compartido, impresión, búsqueda, Bluetooth, cámara, Windows Hello,
+Defender ni Windows Update siguen igual. Todo queda registrado en
+`logs/rollback.json` y se revierte con **Deshacer**.
 
-### Bilingüe
-- Todos los textos nuevos están en español e inglés y se añadieron a
-  `locales/en.hud.json`.
+### Corrección importante en "Deshacer"
+- Antes, desactivar una tarea que **ya estaba desactivada** la apuntaba en el
+  registro de cambios; al pulsar "Deshacer" se **encendía** una telemetría que
+  la app nunca había apagado.
+- Ahora se consulta el estado previo: si ya estaba desactivada, no se toca ni
+  se registra. La prueba nueva lo cubre.
 
 ### Calidad
-- Pruebas nuevas del centro de mando (`test_hud.py`) y del bilingüe
-  (`test_i18n.py`, que ahora revisa también las subcarpetas de `modules/`).
-- `test_i18n.py` vigila que no quede ningún texto sin traducir.
+- Nuevo `test_telemetria.py`: 10 pruebas de rutas, tipos, duplicados, idioma y
+  flujo completo sin tocar el sistema.
+- Total: **34 pruebas** en verde (HUD + i18n + telemetría), `test_i18n.py` 6/6.
 
 ### Notas
-- No hay dependencias nuevas: `psutil` ya era opcional y sigue siéndolo.
-- Si `psutil` no está instalado, la tarjeta de RAM/CPU lo dice en vez de
-  mostrar una cifra inventada.
-- Todo lo que cambia el sistema sigue siendo reversible con "Deshacer".
+- Sin dependencias nuevas.
+- Los perfiles (Equilibrado / Gaming / Privacidad) siguen aplicando solo las
+  tareas, como antes; las políticas se aplican desde **Telemetría**.
