@@ -7,7 +7,7 @@
 ;  con UAC cuando necesitan optimizar el sistema.
 ; ============================================================
 
-#define AppVersion "1.9.0"
+#define AppVersion "2.0.0"
 
 [Setup]
 AppName=Optimización

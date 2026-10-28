@@ -1,70 +1,45 @@
-## Qué hay de nuevo en v1.9.0
+## Qué hay de nuevo en v2.0.0
 
-### Bilingüe español/inglés 🌐
-- El programa ahora funciona en **español e inglés**.
-- **Detección automática**: si Windows está en español arranca en
-  español; en cualquier otro idioma, arranca en inglés.
-- **Selector en la GUI** (botón 🌐 del encabezado): cambia de idioma al
-  instante, sin cerrar el programa.
-- **Opción 11) 🌐 Idioma / Language** en el menú de consola.
-- La preferencia se guarda en `config_gui.json` (`"idioma": "auto"`,
-  `"es"` o `"en"`).
-- Todo el texto de usuario está traducido: menús, botones, diálogos,
-  mensajes del registro y el informe exportado.
-- **El test de efectividad también está traducido** (`test_efectividad.py`),
-  con su propia tabla de traducciones (`locales/en.test.json`).
-- **El instalador también es bilingüe**: al instalarlo se puede elegir
-  español o inglés (textos propios en `instalador/mensajes_es.isl` y
-  `instalador/mensajes_en.isl`).
-- Motor propio (`i18n.py` + tablas en `locales/`), sin dependencias
-  externas. Si falta una traducción, se muestra el texto original.
+### Centro de mando (nueva pantalla principal)
+- **Medidor circular de salud del PC** de 0 a 100, con el anillo de color según el
+  estado: magenta por debajo de 40, amarillo de 40 a 70 y cian por encima de 70.
+  La fórmula está documentada y es fácil de ajustar: disco 30 + inicio 20 +
+  RAM 25 + mantenimiento 25 puntos de penalización; un dato que no se puede
+  medir no penaliza.
+- **Cuatro tarjetas de estado en vivo**, cada una clicable y enlazada a su
+  sección:
+  - **Disco** — GB recuperables (medido de verdad, no estimado).
+  - **Inicio** — programas que arrancan con Windows.
+  - **RAM / CPU** — porcentaje de uso real, refrescado cada 1,5 s sin congelar
+    la ventana.
+  - **Mantenimiento** — días desde el último análisis.
+- **Barra lateral** con todas las funciones de siempre: optimización completa
+  (con vista previa), limpieza, inicio, rendimiento, mantenimiento, perfiles,
+  vista previa, análisis, exportar informe, punto de restauración, telemetría,
+  información, registro y deshacer.
+- **Barra superior** con el título, el selector **ES | EN** y la marca "Auto"
+  cuando el idioma se detectó del sistema.
+- **Botones principales**: **Optimizar ahora** (crea un punto de restauración
+  antes de aplicar el perfil activo; si el punto falla, no cambia nada) y
+  **Deshacer último cambio** (contorno magenta).
 
-### Título de la app
-- El encabezado de la GUI muestra **"⚡ HTs OPTIMIZACIÓN"** (en inglés:
-  "⚡ HTs OPTIMIZATION").
+### Interfaz
+- Paleta HUD centralizada en un solo fichero de tema, tipografía monoespaciada
+  y registro en vivo con colores por tipo de mensaje.
+- Ventana de 1000×660 con mínimo de 900×620; todo sigue legible al
+  redimensionar.
 
-### Correcciones
-- **La instalación ya no falla al final**: el instalador lanzaba la aplicación
-  (que exige administrador) con `CreateProcess` y terminaba con *"CreateProcess
-  falló; código 740"* (*la operación solicitada requiere elevación*). Ahora la
-  lanza con `ShellExecute`, que sí muestra el aviso de UAC.
-- **Si la aplicación está abierta al instalar**, sus ficheros estaban en uso y
-  la instalación fallaba con *"Omitir este archivo"*. Ahora el instalador lo
-  detecta antes de empezar y avisa en el idioma del instalador
-  (*"La aplicación está abierta. Ciérrala y vuelve a ejecutar el instalador."*).
-- **La configuración ya no se ignora en silencio**: si el archivo
-  `config_gui.json` tiene BOM (lo añaden PowerShell y algunos editores), la
-  app lo leía como inválido y perdías tus preferencias (por ejemplo, el
-  idioma elegido). Ahora se lee con `utf-8-sig` y funciona igual.
-- Los mensajes de arranque y cierre del registro de la consola también
-  están traducidos.
-- El nombre del plan de energía sale traducido en el informe (antes ponía el
-  de Windows, en el idioma del sistema).
-- **El idioma ya no se queda a medias al cambiarlo**: las descripciones de
-  servicios, ajustes y rutas se calculaban al arrancar y quedaban congeladas en
-  ese idioma (en inglés se veía *"1) High performance"* junto a *"Activate the
-  'Alto rendimiento' plan?"*). Ahora se recalculan al cambiar de idioma.
-- **La GUI no pierde el historial** del log al cambiar de idioma.
-- Los **nombres de los perfiles** se muestran traducidos: el menú dice
-  *"Balanced"* y el diálogo también.
-- Si el idioma guardado en la configuración no es válido, ahora se usa el del
-  sistema en vez de quedarse en español sin avisar.
+### Bilingüe
+- Todos los textos nuevos están en español e inglés y se añadieron a
+  `locales/en.hud.json`.
 
-### Heredado de v1.8.4
-- Interfaz cyberpunk/dark (el logo de inicio no se modificó).
-- Validación de Python 64 bits; timeout de comandos a 60 s por defecto.
-- Plan de energía inteligente (Equilibrado en laptops, Alto
-  rendimiento en desktop) y deshabilitación de servicios en paralelo.
+### Calidad
+- Pruebas nuevas del centro de mando (`test_hud.py`) y del bilingüe
+  (`test_i18n.py`, que ahora revisa también las subcarpetas de `modules/`).
+- `test_i18n.py` vigila que no quede ningún texto sin traducir.
 
-### Compatibilidad
-- Para ejecutar desde fuente se requiere **Python 3.10+ de 64 bits**
-  (los .exe ya son x64).
-
-## Descargas
-
-- **Optimizacion-GUI.exe** — Interfaz gráfica (con icono custom)
-- **Optimizacion.exe** — Consola (con icono custom)
-- **Optimizacion-Setup.exe** — Instalador junto a los dos anteriores
-
----
-*Todo el código está en el repositorio.*
+### Notas
+- No hay dependencias nuevas: `psutil` ya era opcional y sigue siéndolo.
+- Si `psutil` no está instalado, la tarjeta de RAM/CPU lo dice en vez de
+  mostrar una cifra inventada.
+- Todo lo que cambia el sistema sigue siendo reversible con "Deshacer".
