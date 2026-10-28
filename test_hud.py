@@ -127,6 +127,21 @@ def test_dias_desde_ultimo_log(tmp_path):
     assert dias_desde_ultimo_log(str(tmp_path)) == 0
 
 
+def test_un_log_vacio_no_cuenta_como_mantenimiento(tmp_path):
+    """Un log de 0 bytes se crea al abrir el registro, no al optimizar.
+
+    Si contara, la tarjeta diría "Hoy" tras una operación cancelada.
+    """
+    from modules.hud.datos import dias_desde_ultimo_log
+
+    vacio = tmp_path / f"optimizador-{datetime.now():%Y-%m-%d}.log"
+    vacio.write_text("", encoding="utf-8")
+    assert dias_desde_ultimo_log(str(tmp_path)) is None
+
+    vacio.write_text("contenido real", encoding="utf-8")
+    assert dias_desde_ultimo_log(str(tmp_path)) == 0
+
+
 def test_un_nombre_de_log_raro_no_rompe():
     """Ficheros que no siguen el patrón se ignoran sin excepción."""
     from modules.hud.datos import dias_desde_ultimo_log

@@ -108,6 +108,8 @@ $iscc = @("C:\Program Files (x86)\Inno Setup 6\ISCC.exe", "C:\Program Files\Inno
    `log.vbar` directamente.
 7. La salud del HUD no penaliza los datos no medidos (`None`): sin registros
    de mantenimiento la tarjeta dice "Sin registros" y ese tramo no resta.
+   Los logs de **0 bytes** no cuentan como mantenimiento: `setup_logger()` crea
+   el fichero del día aunque la operación se cancele sin escribir nada.
 
 ## 📚 Fuentes de Verdad
 - `README.md` — Uso y compilación.

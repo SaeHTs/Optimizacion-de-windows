@@ -105,6 +105,10 @@ def dias_desde_ultimo_log(base_logs: str | None = None) -> int | None:
     Es el único registro real de "cuándo se hizo mantenimiento" que
     tiene el proyecto: un fichero por día en `logs/`. Sin ficheros,
     devuelve `None`.
+
+    Un fichero de 0 bytes NO cuenta: `setup_logger()` lo crea al abrir el
+    registro aunque la operación se cancele antes de escribir nada, y eso
+    no es evidencia de que se haya hecho mantenimiento.
     """
     carpeta = base_logs if base_logs is not None else _carpeta_logs()
     try:
@@ -118,8 +122,10 @@ def dias_desde_ultimo_log(base_logs: str | None = None) -> int | None:
         if not coincidencia:
             continue
         try:
+            if os.path.getsize(os.path.join(carpeta, nombre)) == 0:
+                continue
             fechas.append(datetime.strptime(coincidencia.group(1), "%Y-%m-%d").date())
-        except ValueError:  # fecha imposible en el nombre: se ignora
+        except (OSError, ValueError):  # sin acceso o fecha imposible: se ignora
             continue
     if not fechas:
         return None
